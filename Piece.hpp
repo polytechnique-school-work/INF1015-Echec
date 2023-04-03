@@ -1,16 +1,11 @@
-﻿/*
-	Classe abstraite
-*/
-
-
-enum class Team
+﻿enum class Team
 {
 	BLACK, WHITE
 };
 
 class Piece {
 public:
-	virtual void getPossiblePositions() = 0;
+	virtual void getPossiblePositions();
 	Team getTeam();
 private:
 	Team team;
