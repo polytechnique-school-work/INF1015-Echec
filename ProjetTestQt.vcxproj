@@ -114,8 +114,27 @@
   <ItemGroup>
     <ClCompile Include="bibliotheque_cours\bibliotheque_cours.cpp" />
     <ClCompile Include="bibliotheque_cours\verification_allocation.cpp" />
+    <ClCompile Include="Board.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="googletest\src\gtest-all.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Piece.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Board.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Game.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Piece.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
