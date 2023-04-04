@@ -8,5 +8,5 @@ std::list<Location> Pawn::getPossiblePositions() const
 	return locations;
 }
 void Pawn::display(std::ostream& out) const {
-	out << "Pawn" << std::endl;
+	out << "P";
 }

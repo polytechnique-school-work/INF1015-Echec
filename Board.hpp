@@ -19,6 +19,8 @@ public:
 	PieceContainer& getPiece(Location src);
 	Board();
 
+	friend std::ostream& operator<<(std::ostream& out, const Board& board);
+
 private:
 	bool isMovePossible(Location src, Location dst);
 	BoardContainer board;

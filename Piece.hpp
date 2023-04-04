@@ -11,7 +11,7 @@ enum class Team
 
 class Piece {
 public:
-	//Piece(Team team, string name) : team(team), name(name) {};
+	Piece(Team team) : team(team) {};
 	Team getTeam();
 	void setPieceMove();
 	virtual std::list<Location> getPossiblePositions() const = 0;

@@ -3,11 +3,7 @@
 
 class Pawn : public Piece {
 public:
-	/*friend iostream& operator<<(iostream& out, const Piece& piece) {
-		out << "Pion" << endl;
-		return out;
-	}*/
+	Pawn(Team team) : Piece(team) {};
 	std::list<Location> getPossiblePositions() const;
-
 	void display(std::ostream& out) const;
 };

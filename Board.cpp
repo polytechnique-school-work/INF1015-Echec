@@ -37,8 +37,8 @@ Board::Board()
 	for (int i = 0; i < 8; ++i)
 		board[i] = make_unique<PieceContainer[]>(8);
 
-	board[0][0] = move(make_unique<Pawn>());
-	board[0][1] = move(make_unique<King>());
+	board[0][0] = move(make_unique<Pawn>(Pawn(Team::WHITE)));
+	board[0][1] = move(make_unique<King>(King(Team::WHITE)));
 }
 
 bool Board::isMovePossible(Location src, Location dst)

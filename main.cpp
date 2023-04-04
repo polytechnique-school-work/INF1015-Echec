@@ -36,6 +36,34 @@ std::ostream& operator<<(std::ostream& out, const Piece& piece) {
 	return out;
 }
 
+std::ostream& operator<<(std::ostream& out, Board& board)
+{
+	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
+	out << ligneDeSeparation << endl;
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++) {
+
+			auto&& piece = board.getPiece(Location(x, y));
+			if (piece.has_value()) {
+				out << (**piece);
+			}
+			else {
+				out << "X";
+			}
+
+			out << "\t";
+		}
+
+		out << endl;
+	}
+
+	out << ligneDeSeparation << endl;
+
+	return out;
+}
+
+
 
 int main(int argc, char *argv[])
 {
@@ -45,10 +73,12 @@ int main(int argc, char *argv[])
 
 	Board board = Board();
 	PieceContainer& pawn = board.getPiece(Location(0,0));
-	cout << **pawn;
+	// cout << **pawn << endl;
 
 	PieceContainer& king = board.getPiece(Location(0, 1));
-	cout << **king;
+	// cout << **king << endl;
 
+
+	cout << board;
 
 }
