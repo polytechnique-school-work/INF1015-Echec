@@ -9,12 +9,14 @@ PieceContainer& Board::getPiece(Location src) {
 void Board::movePiece(Location src, Location dst)
 {
 	// Ne devrait jamais être run, enlever si non nécessaire.
-	if (!isMovePossible(src, dst)) return;
+	if (!isMovePossible(src, dst)) {
+		cout << "> Mouvement impossible" << endl;
+		return;
+	}
 
-	this->getPiece(dst) = move(this->getPiece(src));
-	this->getPiece(src) = {};
-
-	(**this->getPiece(src)).setPieceMove();
+	this->board[dst.first][dst.second] = move(this->board[src.first][src.second]);
+	this->board[src.first][src.second] = {};
+	(**this->getPiece(dst)).setPieceMove();
 
 	// TODO Compter les pièces et la retirer des pièces actives.
 }

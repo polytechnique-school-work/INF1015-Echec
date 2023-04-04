@@ -81,4 +81,11 @@ int main(int argc, char *argv[])
 
 	cout << board;
 
+
+
+
+	board.movePiece(Location(0,0), Location(1,0));
+
+
+	cout << board;
 }
