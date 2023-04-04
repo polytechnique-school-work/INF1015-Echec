@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include <optional>
 #include <memory>
-#include <list>
-#include "Piece.hpp"
 #include "Pawn.hpp"
 #include "King.hpp"
 
@@ -10,19 +8,18 @@ using namespace std;
 
 static constexpr int BOARD_SIZE = 8;
 
-using Location = pair<int, int>;
-using BoardArray = unique_ptr<unique_ptr<optional<unique_ptr<Piece>>[]>[]>;
+using PieceContainer = optional<unique_ptr<Piece>>;
+using BoardContainer = unique_ptr<unique_ptr<PieceContainer[]>[]>;
 
 class Board {
 public:
 	void movePiece(Location src, Location dst);
-	list<Location> possibleMoves(Location loc);
+	list<Location> possibleMoves(Location src);
 
-
-	//template<typename T>
-	optional<unique_ptr<Piece>>& getPiece(Location loc);
+	PieceContainer& getPiece(Location src);
 	Board();
 
 private:
-	BoardArray board;
+	bool isMovePossible(Location src, Location dst);
+	BoardContainer board;
 };

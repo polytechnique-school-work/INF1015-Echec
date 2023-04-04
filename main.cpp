@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
 	initialiserBibliothequeCours(argc, argv);
 
 	Board board = Board();
-	optional<unique_ptr<Piece>>& pawn = board.getPiece(Location(0,0));
+	PieceContainer& pawn = board.getPiece(Location(0,0));
 	cout << **pawn;
 
-	optional<unique_ptr<Piece>>& king = board.getPiece(Location(0, 1));
+	PieceContainer& king = board.getPiece(Location(0, 1));
 	cout << **king;
 
 

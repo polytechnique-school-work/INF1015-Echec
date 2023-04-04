@@ -7,7 +7,7 @@ public:
 		out << "Pion" << endl;
 		return out;
 	}*/
-	void getPossiblePositions() const {}
+	std::list<Location> getPossiblePositions() const;
 
 	void display(std::ostream& out) const;
 	
