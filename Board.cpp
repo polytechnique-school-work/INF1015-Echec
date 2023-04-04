@@ -9,10 +9,10 @@ PieceContainer& Board::getPiece(Location src) {
 void Board::movePiece(Location src, Location dst)
 {
 	// Ne devrait jamais être run, enlever si non nécessaire.
-	if (!isMovePossible(src, dst)) {
-		cout << "> Mouvement impossible" << endl;
-		return;
-	}
+	//if (!isMovePossible(src, dst)) {
+	//	cout << "> Mouvement impossible" << endl;
+	//	return;
+	//}
 
 	this->board[dst.first][dst.second] = move(this->board[src.first][src.second]);
 	this->board[src.first][src.second] = {};

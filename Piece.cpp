@@ -8,5 +8,10 @@ Team Piece::getTeam()
 
 void Piece::setPieceMove()
 {
-    this->hasAlreadyMove = true;
+    this->hasMove = true;
+}
+
+bool Piece::hasAlreadyMove()
+{
+    return this->hasMove;
 }
