@@ -10,5 +10,4 @@ public:
 	std::list<Location> getPossiblePositions() const;
 
 	void display(std::ostream& out) const;
-	
 };

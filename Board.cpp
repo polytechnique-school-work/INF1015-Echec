@@ -8,22 +8,23 @@ PieceContainer& Board::getPiece(Location src) {
 
 void Board::movePiece(Location src, Location dst)
 {
-	if (!isMovePossible(src, dst)) return; // Ne devrait jamais être run, enlever si non nécessaire.
+	// Ne devrait jamais être run, enlever si non nécessaire.
+	if (!isMovePossible(src, dst)) return;
 
 	this->getPiece(dst) = move(this->getPiece(src));
 	this->getPiece(src) = {};
 
 	(**this->getPiece(src)).setPieceMove();
 
-
-
 	// TODO Compter les pièces et la retirer des pièces actives.
 }
 
 std::list<Location> Board::possibleMoves(Location src)
 {
-	// TODO
-
+	// TODO :	Faire un nettoyage des positions renvoyées par les pièces
+	//			pour éliminer les coordonnées qui sont en dehors du jeu
+	//			et celles qui sont pas possibles.
+ 
 	PieceContainer& piece = this->getPiece(src);
 	return (**piece).getPossiblePositions();
 }

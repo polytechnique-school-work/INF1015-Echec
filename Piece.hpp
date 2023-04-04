@@ -18,7 +18,8 @@ public:
 	virtual void display(std::ostream& out) const = 0;
 	friend std::ostream& operator<<(std::ostream& out, const Piece& piece);
 	virtual ~Piece() = default;
-private:
+protected:
 	Team team;
+private:
 	bool hasAlreadyMove = false;
 };
