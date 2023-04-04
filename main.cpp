@@ -13,6 +13,12 @@ auto& cdbg = clog;
 #include "debogage_memoire.hpp"  //NOTE: Incompatible avec le "placement new", ne pas utiliser cette entête si vous utilisez ce type de "new" dans les lignes qui suivent cette inclusion.
 #endif
 
+#include <iostream>
+#include "Board.hpp"
+
+
+using namespace std;
+
 void initialiserBibliothequeCours([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
 	#ifdef BIBLIOTHEQUE_COURS_INCLUS
@@ -25,10 +31,24 @@ void initialiserBibliothequeCours([[maybe_unused]] int argc, [[maybe_unused]] ch
 	//NOTE: C'est normal que la couverture de code dans l'Explorateur de tests de Visual Studio ne couvre pas la fin de cette fonction ni la fin du main après l'appel à cette fonction puisqu'il exécute uniquement les tests Google Test dans l'appel ci-dessus.
 }
 
+std::ostream& operator<<(std::ostream& out, const Piece& piece) {
+	piece.display(out);
+	return out;
+}
+
+
 int main(int argc, char *argv[])
 {
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);
+
+	Board board = Board();
+	optional<unique_ptr<Piece>>& pawn = board.getPiece(Location(0,0));
+	cout << **pawn;
+
+	optional<unique_ptr<Piece>>& king = board.getPiece(Location(0, 1));
+	cout << **king;
+
 
 }
