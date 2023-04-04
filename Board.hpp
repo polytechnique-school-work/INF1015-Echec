@@ -3,6 +3,10 @@
 #include <memory>
 #include "Pawn.hpp"
 #include "King.hpp"
+#include "Queen.hpp"
+#include "Rock.hpp"
+#include "Bishop.hpp"
+#include "Knight.hpp"
 
 using namespace std;
 
@@ -22,6 +26,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Board& board);
 
 private:
+	PieceContainer pieceConverter(char color, char piece);
 	bool isMovePossible(Location src, Location dst);
 	BoardContainer board;
 };

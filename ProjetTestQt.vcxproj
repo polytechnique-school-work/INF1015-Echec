@@ -114,17 +114,22 @@
   <ItemGroup>
     <ClCompile Include="bibliotheque_cours\bibliotheque_cours.cpp" />
     <ClCompile Include="bibliotheque_cours\verification_allocation.cpp" />
+    <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="googletest\src\gtest-all.cc" />
     <ClCompile Include="King.cpp" />
+    <ClCompile Include="Knight.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Piece.cpp" />
+    <ClCompile Include="Queen.cpp" />
+    <ClCompile Include="Rock.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bishop.hpp" />
     <ClInclude Include="Board.hpp">
       <SubType>
       </SubType>
@@ -134,10 +139,13 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="King.hpp" />
+    <ClInclude Include="Knight.hpp" />
     <ClInclude Include="Piece.hpp">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Queen.hpp" />
+    <ClInclude Include="Rock.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

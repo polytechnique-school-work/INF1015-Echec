@@ -31,14 +31,22 @@ std::list<Location> Board::possibleMoves(Location src)
 
 Board::Board()
 {
+	// Bon c'est la méthode la moins dégueulasse que j'ai trouvé pour placer les pions.
+	const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
+
 	// Initialisation d'un tableau de 8x8 cases.
 	// Tous les éléments sont en fait des nullopt.
 	this->board = make_unique<unique_ptr<PieceContainer[]>[]>(8);
 	for (int i = 0; i < 8; ++i)
 		board[i] = make_unique<PieceContainer[]>(8);
 
-	board[0][0] = move(make_unique<Pawn>(Pawn(Team::WHITE)));
-	board[0][1] = move(make_unique<King>(King(Team::WHITE)));
+	int actual = 0;
+	for (int y = 0; y < 8; ++y) {
+		for (int x = 0; x < 8; ++x) {
+			board[x][y] = this->pieceConverter(defaultBoard[actual], defaultBoard[actual+1]);
+			actual += 2;
+		}
+	}
 }
 
 bool Board::isMovePossible(Location src, Location dst)
@@ -46,4 +54,40 @@ bool Board::isMovePossible(Location src, Location dst)
 	std::list<Location> possibleMoves = this->possibleMoves(src);
 	auto it = std::find(possibleMoves.begin(), possibleMoves.end(), dst);
 	return it != possibleMoves.end();
+}
+
+
+PieceContainer Board::pieceConverter(char color, char piece) {
+	/*
+	Bishop = F
+	Pawn = P
+	King = K
+	Queen = Q
+	Rock = R
+	Knight = C
+
+	Black = B
+	White = W
+	*/
+	Team team = color == 'W' ? Team::WHITE : Team::BLACK;
+
+	switch (piece)
+	{
+	case 'F':
+		return make_unique<Bishop>(Bishop(team));
+	case 'P':
+		return make_unique<Pawn>(Pawn(team));
+	case 'K':
+		return make_unique<King>(King(team));
+	case 'Q':
+		return make_unique<Queen>(Queen(team));
+	case 'R':
+		return make_unique<Rock>(Rock(team));
+	case 'C':
+		return make_unique<Knight>(Knight(team));
+	case 'X':
+		return {};
+	default:
+		return {};
+	}
 }
