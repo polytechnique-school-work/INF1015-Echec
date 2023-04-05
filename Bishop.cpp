@@ -1,5 +1,5 @@
 #include "Bishop.hpp"
-std::list<Location> Bishop::getPossiblePositions() const
+std::list<Location> Bishop::getPossiblePositions(Board& board) const
 {
 	std::list<Location> locations = {};
 

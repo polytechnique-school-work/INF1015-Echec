@@ -32,7 +32,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>6.5.0_msvc2019_64</QtInstall>
+    <QtInstall>6.6.0_msvc2019_64</QtInstall>
     <QtModules>core;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -140,6 +140,7 @@
     </ClInclude>
     <ClInclude Include="King.hpp" />
     <ClInclude Include="Knight.hpp" />
+    <ClInclude Include="Pawn.hpp" />
     <ClInclude Include="Piece.hpp">
       <SubType>
       </SubType>

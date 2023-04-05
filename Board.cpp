@@ -28,7 +28,7 @@ std::list<Location> Board::possibleMoves(Location src)
 	//			et celles qui sont pas possibles.
  
 	PieceContainer& piece = this->getPiece(src);
-	return (**piece).getPossiblePositions();
+	return (**piece).getPossiblePositions(*this);
 }
 
 Board::Board()
@@ -64,7 +64,7 @@ std::list<Location> Board::calculatePossiblePosition(Location pos)
 	Piece& piece = (**this->getPiece(pos));
 	list<Location> positions = {};
 	
-	list<Location> relativePosition = piece.getPossiblePositions();
+	list<Location> relativePosition = piece.getPossiblePositions(*this);
 
 	for (Location& loc : relativePosition) {
 		Location realLocation = { loc.first + pos.first, loc.second + pos.second };
