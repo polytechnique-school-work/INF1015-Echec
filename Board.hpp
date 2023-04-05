@@ -20,11 +20,12 @@ public:
 	void movePiece(Location src, Location dst);
 	list<Location> possibleMoves(Location src);
 
-	PieceContainer& getPiece(Location src);
+	PieceContainer& getPiece(Location src) const;
 	Board();
 
 	friend std::ostream& operator<<(std::ostream& out, const Board& board);
 
+	std::list<Location> calculatePossiblePosition(Location pos);
 private:
 	PieceContainer pieceConverter(char color, char piece);
 	bool isMovePossible(Location src, Location dst);

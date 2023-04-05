@@ -1,6 +1,6 @@
 ﻿#include "Board.hpp"
 
-PieceContainer& Board::getPiece(Location src) {
+PieceContainer& Board::getPiece(Location src) const {
 	return this->board[src.first][src.second];
 }
 
@@ -58,6 +58,33 @@ bool Board::isMovePossible(Location src, Location dst)
 	return it != possibleMoves.end();
 }
 
+
+std::list<Location> Board::calculatePossiblePosition(Location pos)
+{
+	Piece& piece = (**this->getPiece(pos));
+	list<Location> positions = {};
+	
+	list<Location> relativePosition = piece.getPossiblePositions();
+
+	for (Location& loc : relativePosition) {
+		Location realLocation = { loc.first + pos.first, loc.second + pos.second };
+
+		// Regarder si la pièce se situe à l'extérieur du tableau
+		if (realLocation.first < 0 || realLocation.first > 8 || realLocation.second < 0 || realLocation.second > 8) continue;
+
+		// Regarder si la pièce sélectionnée est de la même équipe
+		PieceContainer& pieceAtLocationContainer = this->getPiece(realLocation);
+		if (pieceAtLocationContainer.has_value()) {
+			Piece& pieceAtLocation = (**pieceAtLocationContainer);
+			if (pieceAtLocation.getTeam() == piece.getTeam()) continue;
+		}
+
+		// Normalement tout devrait avoir été calculé
+		positions.push_back(realLocation);
+	}
+
+	return positions;
+}
 
 PieceContainer Board::pieceConverter(char color, char piece) {
 	/*

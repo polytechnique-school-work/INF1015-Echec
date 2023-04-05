@@ -36,7 +36,7 @@ std::ostream& operator<<(std::ostream& out, const Piece& piece) {
 	return out;
 }
 
-std::ostream& operator<<(std::ostream& out, Board& board)
+std::ostream& operator<<(std::ostream& out, const Board& board)
 {
 	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
 	out << ligneDeSeparation << endl;
@@ -63,6 +63,19 @@ std::ostream& operator<<(std::ostream& out, Board& board)
 	return out;
 }
 
+std::ostream& operator<<(std::ostream& out, const Location& loc) {
+	out << "x: " << loc.first << " y: " << loc.second;
+	return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const list<Location>& locations) {
+	out << "Locations: " << endl;
+	for (auto&& loc : locations)
+	{
+		out << "\t" << loc << endl;
+	}
+	return out;
+}
 
 
 int main(int argc, char *argv[])
@@ -72,7 +85,9 @@ int main(int argc, char *argv[])
 	initialiserBibliothequeCours(argc, argv);
 
 	Board board = Board();
-	PieceContainer& pawn = board.getPiece(Location(0,0));
+	Piece& pawn = (**board.getPiece(Location(0,0)));
+	cout << board.calculatePossiblePosition(Location(0,0));
+
 
 	PieceContainer& king = board.getPiece(Location(0, 1));
 
