@@ -1,5 +1,5 @@
 #include "Rock.hpp"
-std::list<Location> Rock::getPossiblePositions(Board& board) const
+std::list<Location> Rock::getPossiblePositions(Board& board, Location& loc) const
 {
 	std::list<Location> locations = {};
 

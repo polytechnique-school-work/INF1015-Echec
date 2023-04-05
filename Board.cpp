@@ -28,7 +28,7 @@ std::list<Location> Board::possibleMoves(Location src)
 	//			et celles qui sont pas possibles.
  
 	PieceContainer& piece = this->getPiece(src);
-	return (**piece).getPossiblePositions(*this);
+	return (**piece).getPossiblePositions(*this, src);
 }
 
 Board::Board()
@@ -45,7 +45,8 @@ Board::Board()
 	int actual = 0;
 	for (int y = 0; y < 8; ++y) {
 		for (int x = 0; x < 8; ++x) {
-			board[x][y] = this->pieceConverter(defaultBoard[actual], defaultBoard[actual+1]);
+			// Le gros truc bizarre c'est une proposition de l'IDE
+			board[x][y] = this->pieceConverter(defaultBoard[actual], defaultBoard[static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(actual) + 1]);
 			actual += 2;
 		}
 	}
@@ -64,7 +65,7 @@ std::list<Location> Board::calculatePossiblePosition(Location pos)
 	Piece& piece = (**this->getPiece(pos));
 	list<Location> positions = {};
 	
-	list<Location> relativePosition = piece.getPossiblePositions(*this);
+	list<Location> relativePosition = piece.getPossiblePositions(*this, pos);
 
 	for (Location& loc : relativePosition) {
 		Location realLocation = { loc.first + pos.first, loc.second + pos.second };

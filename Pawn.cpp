@@ -1,5 +1,5 @@
 ﻿#include "Pawn.hpp"
-std::list<Location> Pawn::getPossiblePositions(Board& board) const
+std::list<Location> Pawn::getPossiblePositions(Board& board, Location& loc) const
 {
 	int position = this->team == Team::WHITE ? -1 : 1;
 	std::list<Location> locations = {};
