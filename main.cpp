@@ -73,10 +73,8 @@ int main(int argc, char *argv[])
 
 	Board board = Board();
 	PieceContainer& pawn = board.getPiece(Location(0,0));
-	// cout << **pawn << endl;
 
 	PieceContainer& king = board.getPiece(Location(0, 1));
-	// cout << **king << endl;
 
 
 	cout << board;

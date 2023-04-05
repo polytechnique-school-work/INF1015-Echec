@@ -14,7 +14,7 @@ public:
 	Piece(Team team) : team(team) {};
 	Team getTeam();
 	void setPieceMove();
-	bool hasAlreadyMove();
+	bool hasAlreadyMove() const;
 	virtual std::list<Location> getPossiblePositions() const = 0;
 	virtual void display(std::ostream& out) const = 0;
 	friend std::ostream& operator<<(std::ostream& out, const Piece& piece);

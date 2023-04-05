@@ -11,7 +11,7 @@ void Piece::setPieceMove()
     this->hasMove = true;
 }
 
-bool Piece::hasAlreadyMove()
+bool Piece::hasAlreadyMove() const
 {
     return this->hasMove;
 }

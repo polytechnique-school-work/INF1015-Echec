@@ -1,5 +1,7 @@
 #pragma once
 #include "Piece.hpp"
+#include "Bishop.hpp"
+#include "Rock.hpp"
 class Queen : public Piece
 {
 public:
