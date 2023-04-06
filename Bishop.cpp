@@ -3,18 +3,13 @@ std::list<Location> Bishop::getPossiblePositions(BoardContainer* board, Location
 {
 	std::list<Location> locations = {};
 	for (int i = -1; i <= 1; i += 2) {
-		for (int j = -1; j <= 1; j += 2) {
+		for (int j = -1; j <= 1; j += 2) { 
 			for (int val = 1; val <= 8; val++) {
-
-				cout << i << endl;
-				cout << j << endl;
-				cout << val << endl;
-
 				int relX = val * j;
 				int relY = val * i;
 				int x = relX + loc.first;
 				int y = relY + loc.second;
-				if (x < 0 || x > 8 || y < 0 || y > 8) continue;
+				if (x < 0 || x > 7 || y < 0 || y > 7) continue;
 
 				PieceContainer& pieceCtr = (*board)[x][y];
 				// On ajoute la pièce seulement si et seulement si
@@ -24,7 +19,6 @@ std::list<Location> Bishop::getPossiblePositions(BoardContainer* board, Location
 				if (pieceCtr.has_value()) {
 					Piece& piece = **pieceCtr;
 					if (piece.getTeam() == this->team) {
-						cout << "same team" << endl;
 						break;
 					}
 					locations.push_back({ relX, relY });
