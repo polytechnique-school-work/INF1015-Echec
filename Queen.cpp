@@ -1,5 +1,5 @@
 #include "Queen.hpp"
-std::list<Location> Queen::getPossiblePositions(Board& board, Location& loc) const
+std::list<Location> Queen::getPossiblePositions(BoardContainer* board, Location& loc) const
 {
 	std::list<Location> bishopPositions = Bishop(this->team).getPossiblePositions(board, loc);
 	std::list<Location> rockPositions = Rock(this->team).getPossiblePositions(board, loc);

@@ -1,6 +1,7 @@
 ﻿#include "Pawn.hpp"
-std::list<Location> Pawn::getPossiblePositions(Board& board, Location& loc) const
+std::list<Location> Pawn::getPossiblePositions(BoardContainer* board, Location& loc) const
 {
+	// À refaire pour éviter qu'il saute par dessus un pion.
 	int position = this->team == Team::WHITE ? -1 : 1;
 	std::list<Location> locations = {};
 	locations.push_back(Location(0, 1 * position));

@@ -85,16 +85,19 @@ int main(int argc, char *argv[])
 	initialiserBibliothequeCours(argc, argv);
 
 	Board board = Board();
-	Piece& pawn = (**board.getPiece(Location(0,0)));
-	cout << board.calculatePossiblePosition(Location(0,0));
+	Piece& rock = (**board.getPiece(Location(0,0)));
 
+	cout << board;
+	board.movePiece({ 0,0 }, { 0, 1 });
 
 	PieceContainer& king = board.getPiece(Location(0, 1));
 
 
-	cout << board;
+	cout << board.calculatePossiblePosition({ 0,1 });
 
-	board.movePiece(Location(0,0), Location(1,0));
+
+
+	//board.movePiece(Location(0,0), Location(1,0));
 
 	cout << board;
 }

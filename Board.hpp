@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <optional>
 #include <memory>
+#include "Piece.hpp"
 #include "Pawn.hpp"
 #include "King.hpp"
 #include "Queen.hpp"
@@ -12,8 +13,7 @@ using namespace std;
 
 static constexpr int BOARD_SIZE = 8;
 
-using PieceContainer = optional<unique_ptr<Piece>>;
-using BoardContainer = unique_ptr<unique_ptr<PieceContainer[]>[]>;
+
 
 class Board {
 public:
