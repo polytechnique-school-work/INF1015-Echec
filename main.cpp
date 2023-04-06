@@ -92,12 +92,7 @@ int main(int argc, char *argv[])
 
 	PieceContainer& king = board.getPiece(Location(0, 1));
 
-
 	cout << board.calculatePossiblePosition({ 0,1 });
-
-
-
-	//board.movePiece(Location(0,0), Location(1,0));
 
 	cout << board;
 }
