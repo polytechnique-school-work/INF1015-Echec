@@ -1,4 +1,5 @@
 #include "Piece.hpp"
+using namespace model;
 
 
 Team Piece::getTeam()

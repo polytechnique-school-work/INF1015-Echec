@@ -1,4 +1,6 @@
 #include "Knight.hpp"
+
+using namespace model;
 std::list<Location> Knight::getPossiblePositions(BoardContainer* board, Location& loc) const
 {
 	// Les positions ont été reprises de mon ancien jeu d'échec en python : https://github.com/Sportek/chess

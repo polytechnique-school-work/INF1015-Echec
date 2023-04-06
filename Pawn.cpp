@@ -1,4 +1,5 @@
 ﻿#include "Pawn.hpp"
+using namespace model;
 std::list<Location> Pawn::getPossiblePositions(BoardContainer* board, Location& loc) const
 {
 	// À refaire pour éviter qu'il saute par dessus un pion.

@@ -1,5 +1,9 @@
 #include "Rock.hpp"
-std::list<Location> Rock::getPossiblePositions(BoardContainer* board, Location& loc) const
+
+using namespace model;
+using namespace std;
+
+list<Location> Rock::getPossiblePositions(BoardContainer* board, Location& loc) const
 {
 	std::list<Location> locations = {};
 

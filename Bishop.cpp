@@ -1,4 +1,8 @@
 #include "Bishop.hpp"
+
+
+using namespace model;
+
 std::list<Location> Bishop::getPossiblePositions(BoardContainer* board, Location& loc) const
 {
 	std::list<Location> locations = {};

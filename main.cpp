@@ -18,6 +18,7 @@ auto& cdbg = clog;
 
 
 using namespace std;
+using namespace model;
 
 void initialiserBibliothequeCours([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
@@ -31,50 +32,54 @@ void initialiserBibliothequeCours([[maybe_unused]] int argc, [[maybe_unused]] ch
 	//NOTE: C'est normal que la couverture de code dans l'Explorateur de tests de Visual Studio ne couvre pas la fin de cette fonction ni la fin du main après l'appel à cette fonction puisqu'il exécute uniquement les tests Google Test dans l'appel ci-dessus.
 }
 
-std::ostream& operator<<(std::ostream& out, const Piece& piece) {
-	piece.display(out);
-	return out;
-}
+namespace model {
 
-std::ostream& operator<<(std::ostream& out, const Board& board)
-{
-	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
-	out << ligneDeSeparation << endl;
-	for (int y = 0; y < BOARD_SIZE; y++)
+	std::ostream& operator<<(std::ostream& out, const Piece& piece) {
+		piece.display(out);
+		return out;
+	}
+
+	std::ostream& operator<<(std::ostream& out, const Board& board)
 	{
-		for (int x = 0; x < BOARD_SIZE; x++) {
+		static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
+		out << ligneDeSeparation << endl;
+		for (int y = 0; y < BOARD_SIZE; y++)
+		{
+			for (int x = 0; x < BOARD_SIZE; x++) {
 
-			auto&& piece = board.getPiece(Location(x, y));
-			if (piece.has_value()) {
-				out << (**piece);
-			}
-			else {
-				out << "X";
+				auto&& piece = board.getPiece(Location(x, y));
+				if (piece.has_value()) {
+					out << (**piece);
+				}
+				else {
+					out << "X";
+				}
+
+				out << "\t";
 			}
 
-			out << "\t";
+			out << endl;
 		}
 
-		out << endl;
+		out << ligneDeSeparation << endl;
+
+		return out;
 	}
 
-	out << ligneDeSeparation << endl;
-
-	return out;
-}
-
-std::ostream& operator<<(std::ostream& out, const Location& loc) {
-	out << "x: " << loc.first << " y: " << loc.second;
-	return out;
-}
-
-std::ostream& operator<<(std::ostream& out, const list<Location>& locations) {
-	out << "Locations: " << endl;
-	for (auto&& loc : locations)
-	{
-		out << "\t" << loc << endl;
+	std::ostream& operator<<(std::ostream& out, const Location& loc) {
+		out << "x: " << loc.first << " y: " << loc.second;
+		return out;
 	}
-	return out;
+
+	std::ostream& operator<<(std::ostream& out, const list<Location>& locations) {
+		out << "Locations: " << endl;
+		for (auto&& loc : locations)
+		{
+			out << "\t" << loc << endl;
+		}
+		return out;
+	}
+
 }
 
 
@@ -85,14 +90,14 @@ int main(int argc, char *argv[])
 	initialiserBibliothequeCours(argc, argv);
 
 	Board board = Board();
-	Piece& rock = (**board.getPiece(Location(0,0)));
+	Piece& rock = (**board.getPiece(Location(0, 0)));
 
 	cout << board;
 	board.movePiece({ 0,0 }, { 0, 1 });
 
 	PieceContainer& king = board.getPiece(Location(0, 1));
 
-	cout << board.calculatePossiblePosition({ 0,1 });
+	cout << board.calculatePossiblePosition({ 0, 1 });
 
 	cout << board;
 }

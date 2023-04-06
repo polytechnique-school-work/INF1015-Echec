@@ -1,5 +1,8 @@
 ﻿#include "Board.hpp"
 
+using namespace std;
+using namespace model;
+
 PieceContainer& Board::getPiece(Location src) const {
 	return this->board[src.first][src.second];
 }
@@ -38,9 +41,9 @@ Board::Board()
 
 	// Initialisation d'un tableau de 8x8 cases.
 	// Tous les éléments sont en fait des nullopt.
-	this->board = make_unique<unique_ptr<PieceContainer[]>[]>(8);
+	this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(8);
 	for (int i = 0; i < 8; ++i)
-		board[i] = make_unique<PieceContainer[]>(8);
+		board[i] = std::make_unique<PieceContainer[]>(8);
 
 	int actual = 0;
 	for (int y = 0; y < 8; ++y) {
@@ -55,7 +58,7 @@ Board::Board()
 bool Board::isMovePossible(Location src, Location dst)
 {
 	std::list<Location> possibleMoves = this->possibleMoves(src);
-	auto it = std::find(possibleMoves.begin(), possibleMoves.end(), dst);
+	auto it = find(possibleMoves.begin(), possibleMoves.end(), dst);
 	return it != possibleMoves.end();
 }
 

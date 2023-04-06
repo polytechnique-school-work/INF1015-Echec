@@ -1,4 +1,6 @@
 #include "Queen.hpp"
+
+using namespace model;
 std::list<Location> Queen::getPossiblePositions(BoardContainer* board, Location& loc) const
 {
 	std::list<Location> bishopPositions = Bishop(this->team).getPossiblePositions(board, loc);
