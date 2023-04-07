@@ -127,3 +127,16 @@ PieceContainer Board::pieceConverter(char color, char piece) {
 		return {};
 	}
 }
+
+model::Board::Board() {}
+
+model::Board::~Board() {}
+
+Board* model::Board::getInstance()
+{
+
+	if ($instance == nullptr) {
+		$instance = new Board();
+	}
+	return $instance;
+}

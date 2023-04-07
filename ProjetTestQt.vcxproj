@@ -120,6 +120,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="googletest\src\gtest-all.cc" />
+    <ClCompile Include="History.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="main.cpp" />
@@ -138,6 +139,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="History.hpp" />
     <ClInclude Include="King.hpp" />
     <ClInclude Include="Knight.hpp" />
     <ClInclude Include="Pawn.hpp" />

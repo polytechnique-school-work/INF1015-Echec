@@ -8,6 +8,8 @@
 #include "Rock.hpp"
 #include "Bishop.hpp"
 #include "Knight.hpp"
+#include <forward_list>
+#include "History.hpp"
 
 namespace model {
 
@@ -32,11 +34,17 @@ namespace model {
 		// n'est pas possible d'être mangé au prochain tour).
 		bool isMat();
 
+		PieceContainer pieceConverter(char color, char piece);
+
+		Board();
+		~Board();
+		static Board* getInstance();
+		static Board* $instance;
 
 	private:
-		PieceContainer pieceConverter(char color, char piece);
 		bool isMovePossible(Location src, Location dst);
 		BoardContainer board;
+		forward_list<History> history;
 	};
 
 }
