@@ -1,9 +1,10 @@
 #include "Rock.hpp"
+#include "Board.hpp";
 
 using namespace model;
 using namespace std;
 
-list<Location> Rock::getPossiblePositions(BoardContainer* board, Location& loc) const
+list<Location> Rock::getPossiblePositions(Location& loc) const
 {
 	std::list<Location> locations = {};
 
@@ -21,7 +22,7 @@ list<Location> Rock::getPossiblePositions(BoardContainer* board, Location& loc) 
 				if (x < 0 || x > 7 || y < 0 || y > 7) continue;
 				cout << x << " " << y << endl;
 
-				PieceContainer& pieceCtr = (*board)[x][y];
+				PieceContainer& pieceCtr = Board::getInstance().getBoardContainer()[x][y];
 				// On ajoute la pièce seulement si et seulement si
 				// La pièce n'est pas limitée par une pièce d'une même équipe
 				// ET qu'elle n'a la possibilité que de manger une seule pièce.

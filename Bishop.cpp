@@ -1,9 +1,10 @@
 #include "Bishop.hpp"
+#include "Board.hpp";
 
 
 using namespace model;
 
-std::list<Location> Bishop::getPossiblePositions(BoardContainer* board, Location& loc) const
+std::list<Location> Bishop::getPossiblePositions(Location& loc) const
 {
 	std::list<Location> locations = {};
 	for (int i = -1; i <= 1; i += 2) {
@@ -15,7 +16,7 @@ std::list<Location> Bishop::getPossiblePositions(BoardContainer* board, Location
 				int y = relY + loc.second;
 				if (x < 0 || x > 7 || y < 0 || y > 7) continue;
 
-				PieceContainer& pieceCtr = (*board)[x][y];
+				PieceContainer& pieceCtr = Board::getInstance().getBoardContainer()[x][y];
 				// On ajoute la pièce seulement si et seulement si
 				// La pièce n'est pas limitée par une pièce d'une même équipe
 				// ET qu'elle n'a la possibilité que de manger une seule pièce.

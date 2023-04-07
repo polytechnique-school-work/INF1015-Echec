@@ -6,7 +6,7 @@ namespace model {
 	{
 	public:
 		Rock(Team team) : Piece(team) {};
-		std::list<Location> getPossiblePositions(BoardContainer* board, Location& loc) const;
+		std::list<Location> getPossiblePositions(Location& loc) const;
 		void display(std::ostream& out) const;
 	private:
 

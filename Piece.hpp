@@ -24,7 +24,7 @@ namespace model {
 		Team getTeam();
 		void setPieceMove();
 		bool hasAlreadyMove() const;
-		virtual std::list<Location> getPossiblePositions(BoardContainer* board, Location& loc) const = 0;
+		virtual std::list<Location> getPossiblePositions(Location& loc) const = 0;
 		virtual void display(std::ostream& out) const = 0;
 		friend std::ostream& operator<<(std::ostream& out, const Piece& piece);
 		virtual ~Piece() = default;
@@ -33,5 +33,4 @@ namespace model {
 	private:
 		bool hasMove = false;
 	};
-
 }

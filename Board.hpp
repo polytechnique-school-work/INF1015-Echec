@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <optional>
 #include <memory>
+#include <forward_list>
 #include "Piece.hpp"
 #include "Pawn.hpp"
 #include "King.hpp"
@@ -8,8 +9,6 @@
 #include "Rock.hpp"
 #include "Bishop.hpp"
 #include "Knight.hpp"
-#include <forward_list>
-#include "History.hpp"
 
 namespace model {
 
@@ -37,11 +36,12 @@ namespace model {
 		PieceContainer pieceConverter(char color, char piece);
 		static Board& getInstance();
 
+		BoardContainer& const getBoardContainer();
+
 	private:
 		static std::unique_ptr<Board> $instance;
 		bool isMovePossible(Location src, Location dst);
 		BoardContainer board;
 		// forward_list<History> history;
 	};
-
 }

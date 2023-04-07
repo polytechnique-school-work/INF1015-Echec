@@ -1,4 +1,5 @@
 ﻿#include "Board.hpp"
+#include "Board.hpp";
 
 using namespace std;
 using namespace model;
@@ -31,7 +32,7 @@ std::list<Location> Board::possibleMoves(Location src)
 	//			et celles qui sont pas possibles.
  
 	PieceContainer& piece = this->getPiece(src);
-	return (**piece).getPossiblePositions(&this->board, src);
+	return (**piece).getPossiblePositions(src);
 }
 
 Board::Board()
@@ -71,7 +72,7 @@ std::list<Location> Board::calculatePossiblePosition(Location pos)
 
 	list<Location> positions = {};
 	
-	list<Location> relativePosition = piece.getPossiblePositions(&this->board, pos);
+	list<Location> relativePosition = piece.getPossiblePositions(pos);
 
 	for (Location& loc : relativePosition) {
 		Location realLocation = { loc.first + pos.first, loc.second + pos.second };
@@ -137,4 +138,9 @@ Board& Board::getInstance()
 		$instance = make_unique<Board>(Board());
 	}
 	return *$instance;
+}
+
+BoardContainer& const model::Board::getBoardContainer()
+{
+	return this->board;
 }

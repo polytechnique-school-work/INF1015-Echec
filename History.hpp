@@ -1,5 +1,4 @@
 #pragma once
-#include "Piece.hpp"
 namespace model {
 
 	class History
@@ -13,10 +12,10 @@ namespace model {
 		char team;
 
 		// L'emplacement initial de la pièce
-		Location before;
+		//Location before;
 
 		// L'emplacement final de la pièce
-		Location after;
+		//Location after;
 	};
 }
 
