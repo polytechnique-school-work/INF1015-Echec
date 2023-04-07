@@ -128,15 +128,13 @@ PieceContainer Board::pieceConverter(char color, char piece) {
 	}
 }
 
-model::Board::Board() {}
+unique_ptr<Board> Board::$instance = nullptr;
 
-model::Board::~Board() {}
-
-Board* model::Board::getInstance()
+Board& Board::getInstance()
 {
 
 	if ($instance == nullptr) {
-		$instance = new Board();
+		$instance = make_unique<Board>(Board());
 	}
-	return $instance;
+	return *$instance;
 }

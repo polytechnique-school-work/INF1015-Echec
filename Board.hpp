@@ -35,16 +35,13 @@ namespace model {
 		bool isMat();
 
 		PieceContainer pieceConverter(char color, char piece);
-
-		Board();
-		~Board();
-		static Board* getInstance();
-		static Board* $instance;
+		static Board& getInstance();
 
 	private:
+		static std::unique_ptr<Board> $instance;
 		bool isMovePossible(Location src, Location dst);
 		BoardContainer board;
-		forward_list<History> history;
+		// forward_list<History> history;
 	};
 
 }

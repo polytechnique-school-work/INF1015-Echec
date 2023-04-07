@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);
 
-	Board board = Board();
+	Board& board = Board::getInstance();
 	Piece& rock = (**board.getPiece(Location(0, 0)));
 
 	cout << board;
