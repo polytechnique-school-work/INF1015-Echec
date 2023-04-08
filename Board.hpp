@@ -38,8 +38,11 @@ namespace model {
 
 		BoardContainer& getBoardContainer();
 
+		std::list<Location> relativeToRealPosition(std::list<Location>& locations, Location pos);
+
 		bool isSafeMove(Location& loc, Team& team);
-		void removeUnsafeMove(std::list<Location>& possibleMoves, Team& team);
+		void removeUnsafeMove(std::list<Location>& possibleMoves, Team team);
+		void removeSameTeamMove(std::list<Location>& possibleMoves, Team team);
 
 		void printPiecePosition();
 

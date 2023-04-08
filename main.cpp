@@ -95,6 +95,9 @@ int main(int argc, char *argv[])
 //	Piece& rock = (**board.getPiece(Location(0, 0)));
 
 	cout << board;
+
+	cout << board.calculatePossiblePosition({3, 3});
+
 //	board.movePiece({ 0,0 }, { 0, 1 });
 
 //	cout << board;

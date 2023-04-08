@@ -20,7 +20,6 @@ list<Location> Rock::getPossiblePositions(Location& loc) const
 				int x = relX + loc.first;
 				int y = relY + loc.second;
 				if (x < 0 || x > 7 || y < 0 || y > 7) continue;
-				cout << x << " " << y << endl;
 
 				PieceContainer& pieceCtr = Board::getInstance().getBoardContainer()[x][y];
 				// On ajoute la pièce seulement si et seulement si

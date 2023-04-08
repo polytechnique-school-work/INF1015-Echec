@@ -1,4 +1,5 @@
 #include "King.hpp"
+#include "Board.hpp"
 
 using namespace model;
 King::King(Team team) : Piece(team)
@@ -14,7 +15,6 @@ King::King(Team team, bool bypass): Piece(team)
 }
 std::list<Location> King::getPossiblePositions(Location& loc) const
 {
-	// Les positions ont ete reprises de mon ancien jeu d'echec en python : https://github.com/Sportek/chess
 	return { {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1} };
 }
 

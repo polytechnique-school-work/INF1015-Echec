@@ -88,29 +88,23 @@ void model::Board::printPiecePosition()
 
 std::list<Location> Board::calculatePossiblePosition(Location pos)
 {
-	Piece& piece = (**this->getPiece(pos));
 
-	cout << piece << endl;
-
-	list<Location> positions = {};
+	// TODO PLACER CE CODE QUELQUE PART! IMPORTANT
+	// Regarder si la pièce sélectionnée est de la même équipe
 	
-	list<Location> relativePosition = piece.getPossiblePositions(pos);
+	
 
-	for (Location& loc : relativePosition) {
-		Location realLocation = { loc.first + pos.first, loc.second + pos.second };
+	//Piece& piece = this->board.getPiece(pos);
 
-		// Regarder si la pièce se situe à l'extérieur du tableau
-		if (realLocation.first < 0 || realLocation.first > 8 || realLocation.second < 0 || realLocation.second > 8) continue;
+	list<Location> relativePosition = (**getPiece(pos)).getPossiblePositions(pos);
 
-		// Regarder si la pièce sélectionnée est de la même équipe
-		PieceContainer& pieceAtLocationContainer = this->getPiece(realLocation);
-		if (pieceAtLocationContainer.has_value()) {
-			Piece& pieceAtLocation = (**pieceAtLocationContainer);
-			if (pieceAtLocation.getTeam() == piece.getTeam()) continue;
-		}
 
-		// Normalement tout devrait avoir été calculé
-		positions.push_back(realLocation);
+	list<Location> positions = relativeToRealPosition(relativePosition, pos);
+
+	Piece& piece = (**this->getPiece(pos));
+	
+	if (King* king = dynamic_cast<King*>(&piece)) {
+		Board::getInstance().removeUnsafeMove(positions, king->getTeam());
 	}
 
 	return positions;
@@ -182,6 +176,25 @@ BoardContainer& const Board::getBoardContainer()
 	return this->board;
 }
 
+list<Location> model::Board::relativeToRealPosition(list<Location>& relativePositions, Location pos)
+{
+	list<Location> positions = {};
+
+	for (Location& loc : relativePositions) {
+
+		// Calculer la location relative
+		Location realLocation = { loc.first + pos.first, loc.second + pos.second };
+
+		// Regarder si la pièce se situe à l'extérieur du tableau
+		if (realLocation.first < 0 || realLocation.first > 8 || realLocation.second < 0 || realLocation.second > 8) continue;
+
+		// Normalement tout devrait avoir été calculé
+		positions.push_back(realLocation);
+	}
+
+	return positions;
+}
+
 bool Board::isSafeMove(Location& loc, Team& team)
 {
 	Team opponent = team == Team::WHITE ? Team::BLACK : Team::WHITE;
@@ -198,20 +211,34 @@ bool Board::isSafeMove(Location& loc, Team& team)
 	};
 	Board& board = Board::getInstance();
 	for (shared_ptr<Piece>& piece : pieces) {
-		list<Location> positions = piece->getPossiblePositions(loc);
+		// FIXME Le problème vient du fait que getPossiblePositions retourne des positions relatives. Il faut changer ça...
+
+		list<Location> relativePositions = piece->getPossiblePositions(loc);
+		list<Location> positions = relativeToRealPosition(relativePositions, loc);
 		for (Location& position : positions) {
-			if (board.getPiece(position).has_value() && typeid(piece) == typeid(**board.getPiece(position))) {
+			auto&& piece = board.getPiece(position);
+
+			//bool second = typeid(piece) == typeid(**board.getPiece(position));
+			if (piece) {
 				return false;
 			}
 		}
 	}
-
 	return true;
 }
 
-void Board::removeUnsafeMove(list<Location>& possibleMoves, Team& team)
+void Board::removeUnsafeMove(list<Location>& possibleMoves, Team team)
 {
-	for (Location& possibleMove : possibleMoves) {
-		possibleMoves.remove_if([this, &team](Location& move) { return !isSafeMove(move, team); });
+	possibleMoves.remove_if([this, &team](Location& move) { return !isSafeMove(move, team); });
+}
+
+void model::Board::removeSameTeamMove(std::list<Location>& possibleMoves, Team team)
+{
+	for (Location& location : possibleMoves) {
+		PieceContainer& pieceAtLocationContainer = this->getPiece(location);
+		if (pieceAtLocationContainer.has_value()) {
+			Piece& pieceAtLocation = (**pieceAtLocationContainer);
+			if (pieceAtLocation.getTeam() == team) possibleMoves.remove(location);
+		}
 	}
 }
