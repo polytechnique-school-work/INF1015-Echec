@@ -68,7 +68,7 @@ namespace model {
 	}
 
 	std::ostream& operator<<(std::ostream& out, const Location& loc) {
-		out << "x: " << loc.first << " y: " << loc.second;
+		out << "(x: " << loc.first << " y: " << loc.second << ")";
 		return out;
 	}
 
@@ -91,15 +91,16 @@ int main(int argc, char *argv[])
 	initialiserBibliothequeCours(argc, argv);
 
 	Board& board = Board::getInstance();
-	Piece& rock = (**board.getPiece(Location(0, 0)));
+	board.printPiecePosition();
+//	Piece& rock = (**board.getPiece(Location(0, 0)));
 
 	cout << board;
-	board.movePiece({ 0,0 }, { 0, 1 });
+//	board.movePiece({ 0,0 }, { 0, 1 });
 
-	cout << board;
+//	cout << board;
 
-	board.rollback();
+//	board.rollback();
 
-	cout << board;
+//	cout << board;
 
 }

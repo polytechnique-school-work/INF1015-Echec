@@ -6,6 +6,7 @@
 #include "Rock.hpp"
 #include "Bishop.hpp"
 #include "Knight.hpp"
+#include <iostream>
 
 using namespace std;
 using namespace model;
@@ -46,8 +47,8 @@ std::list<Location> Board::possibleMoves(Location src)
 Board::Board()
 {
 	// Bon c'est la méthode la moins dégueulasse que j'ai trouvé pour placer les pions.
-	const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
-
+	// const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
+	const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
 	// Initialisation d'un tableau de 8x8 cases.
 	// Tous les éléments sont en fait des nullopt.
 	this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(8);
@@ -71,6 +72,17 @@ bool Board::isMovePossible(Location src, Location dst)
 	std::list<Location> possibleMoves = this->possibleMoves(src);
 	auto it = find(possibleMoves.begin(), possibleMoves.end(), dst);
 	return it != possibleMoves.end();
+}
+// (x: " << j << " y: " << i << ")"
+void model::Board::printPiecePosition()
+{
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (board[j][i].has_value()) {
+				cout << typeid((**board[j][i])).name() << "\t" << Location(j, i) << endl;
+			}
+		}
+	}
 }
 
 
@@ -107,6 +119,16 @@ std::list<Location> Board::calculatePossiblePosition(Location pos)
 void model::Board::rollback()
 {
 	this->history.pop();
+}
+
+bool model::Board::isEchec(Location& loc, Team& team)
+{
+	return false;
+}
+
+bool model::Board::isMat(Location& loc, Team& team)
+{
+	return false;
 }
 
 PieceContainer Board::pieceConverter(char color, char piece) {
@@ -166,16 +188,16 @@ bool Board::isSafeMove(Location& loc, Team& team)
 
 	// TODO : Faire des tests de rapidité, si ce serait pas plus rapide de faire 2 listes de vecteurs selon la team
 	// et de les garder en variable static déjà déclaré et choisir en fonction de ce qu'on a besoin.
-	vector<unique_ptr<Piece>> pieces = {
-		make_unique<Queen>(Queen(opponent)),
-		make_unique<Bishop>(Bishop(opponent)), 
-		make_unique<King>(King(opponent, true)),
-		make_unique<Knight>(Knight(opponent)),
-		make_unique<Rock>(Rock(opponent)),
-		make_unique<Pawn>(Pawn(opponent)),
+	vector<shared_ptr<Piece>> pieces = {
+		make_shared<Queen>(Queen(opponent)),
+		make_shared<Bishop>(Bishop(opponent)),
+		make_shared<King>(King(opponent, true)),
+		make_shared<Knight>(Knight(opponent)),
+		make_shared<Rock>(Rock(opponent)),
+		make_shared<Pawn>(Pawn(opponent)),
 	};
 	Board& board = Board::getInstance();
-	for (unique_ptr<Piece>& piece : pieces) {
+	for (shared_ptr<Piece>& piece : pieces) {
 		list<Location> positions = piece->getPossiblePositions(loc);
 		for (Location& position : positions) {
 			if (board.getPiece(position).has_value() && typeid(piece) == typeid(**board.getPiece(position))) {
@@ -185,4 +207,11 @@ bool Board::isSafeMove(Location& loc, Team& team)
 	}
 
 	return true;
+}
+
+void Board::removeUnsafeMove(list<Location>& possibleMoves, Team& team)
+{
+	for (Location& possibleMove : possibleMoves) {
+		possibleMoves.remove_if([this, &team](Location& move) { return !isSafeMove(move, team); });
+	}
 }

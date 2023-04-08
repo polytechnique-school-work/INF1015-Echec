@@ -15,6 +15,9 @@ namespace model {
 	using BoardContainer = std::unique_ptr<std::unique_ptr<PieceContainer[]>[]>;
 	using Pieces = std::vector<PieceContainer>;
 
+	std::ostream& operator<<(std::ostream& out, const std::list<Location>& locations);
+	std::ostream& operator<<(std::ostream& out, const Location& loc);
+
 	enum class Team
 	{
 		BLACK, WHITE
