@@ -36,6 +36,8 @@ namespace model {
 
 		BoardContainer& getBoardContainer();
 
+		bool isSafeMove(Location& loc, Team& team);
+
 	private:
 		static std::unique_ptr<Board> $instance;
 		bool isMovePossible(Location src, Location dst);

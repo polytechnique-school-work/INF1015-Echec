@@ -159,3 +159,30 @@ BoardContainer& const Board::getBoardContainer()
 {
 	return this->board;
 }
+
+bool Board::isSafeMove(Location& loc, Team& team)
+{
+	Team opponent = team == Team::WHITE ? Team::BLACK : Team::WHITE;
+
+	// TODO : Faire des tests de rapidité, si ce serait pas plus rapide de faire 2 listes de vecteurs selon la team
+	// et de les garder en variable static déjà déclaré et choisir en fonction de ce qu'on a besoin.
+	vector<unique_ptr<Piece>> pieces = {
+		make_unique<Queen>(Queen(opponent)),
+		make_unique<Bishop>(Bishop(opponent)), 
+		make_unique<King>(King(opponent, true)),
+		make_unique<Knight>(Knight(opponent)),
+		make_unique<Rock>(Rock(opponent)),
+		make_unique<Pawn>(Pawn(opponent)),
+	};
+	Board& board = Board::getInstance();
+	for (unique_ptr<Piece>& piece : pieces) {
+		list<Location> positions = piece->getPossiblePositions(loc);
+		for (Location& position : positions) {
+			if (board.getPiece(position).has_value() && typeid(piece) == typeid(**board.getPiece(position))) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
