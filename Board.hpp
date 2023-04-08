@@ -1,14 +1,10 @@
 ﻿#pragma once
 #include <optional>
 #include <memory>
-#include <forward_list>
+#include <stack>
 #include "Piece.hpp"
-#include "Pawn.hpp"
-#include "King.hpp"
-#include "Queen.hpp"
-#include "Rock.hpp"
-#include "Bishop.hpp"
-#include "Knight.hpp"
+#include "History.hpp"
+
 
 namespace model {
 
@@ -26,6 +22,8 @@ namespace model {
 
 		std::list<Location> calculatePossiblePosition(Location pos);
 
+		void rollback();
+
 		bool isEchec();
 
 		// Si le roi n'a pas de possibleMoves (faire en sorte de retirer les moves dangereux) ET s'il
@@ -36,12 +34,14 @@ namespace model {
 		PieceContainer pieceConverter(char color, char piece);
 		static Board& getInstance();
 
-		BoardContainer& const getBoardContainer();
+		BoardContainer& getBoardContainer();
 
 	private:
 		static std::unique_ptr<Board> $instance;
 		bool isMovePossible(Location src, Location dst);
 		BoardContainer board;
-		// forward_list<History> history;
+		Pieces pieces;
+
+		std::stack<History> history;
 	};
 }

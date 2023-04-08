@@ -1,5 +1,11 @@
 ﻿#include "Board.hpp"
 #include "Board.hpp";
+#include "Pawn.hpp"
+#include "King.hpp"
+#include "Queen.hpp"
+#include "Rock.hpp"
+#include "Bishop.hpp"
+#include "Knight.hpp"
 
 using namespace std;
 using namespace model;
@@ -18,9 +24,11 @@ void Board::movePiece(Location src, Location dst)
 	//	return;
 	//}
 
+	this->history.push(History(src, dst));
+
 	this->board[dst.first][dst.second] = move(this->board[src.first][src.second]);
 	this->board[src.first][src.second] = {};
-	(**this->getPiece(dst)).setPieceMove();
+	(**this->getPiece(dst)).incrementMoves();
 
 	// TODO Compter les pièces et la retirer des pièces actives.
 }
@@ -50,7 +58,9 @@ Board::Board()
 	for (int y = 0; y < 8; ++y) {
 		for (int x = 0; x < 8; ++x) {
 			// Le gros truc bizarre c'est une proposition de l'IDE
-			board[x][y] = this->pieceConverter(defaultBoard[actual], defaultBoard[static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(actual) + 1]);
+			PieceContainer piece = this->pieceConverter(defaultBoard[actual], defaultBoard[static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(actual) + 1]);
+			board[x][y] = piece;
+			this->pieces.push_back(piece);
 			actual += 2;
 		}
 	}
@@ -92,6 +102,11 @@ std::list<Location> Board::calculatePossiblePosition(Location pos)
 	}
 
 	return positions;
+}
+
+void model::Board::rollback()
+{
+	this->history.pop();
 }
 
 PieceContainer Board::pieceConverter(char color, char piece) {
@@ -140,7 +155,7 @@ Board& Board::getInstance()
 	return *$instance;
 }
 
-BoardContainer& const model::Board::getBoardContainer()
+BoardContainer& const Board::getBoardContainer()
 {
 	return this->board;
 }

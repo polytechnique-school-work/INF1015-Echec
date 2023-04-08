@@ -7,12 +7,17 @@ Team Piece::getTeam()
     return this->team;
 }
 
-void Piece::setPieceMove()
+void Piece::incrementMoves()
 {
-    this->hasMove = true;
+    this->moves += 1;
 }
 
-bool Piece::hasAlreadyMove() const
+void Piece::decrementMoves()
 {
-    return this->hasMove;
+    this->moves -= 1;
+}
+
+bool Piece::getMoves() const
+{
+    return this->moves;
 }

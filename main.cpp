@@ -15,6 +15,7 @@ auto& cdbg = clog;
 
 #include <iostream>
 #include "Board.hpp"
+#include "King.hpp"
 
 
 using namespace std;
@@ -95,9 +96,10 @@ int main(int argc, char *argv[])
 	cout << board;
 	board.movePiece({ 0,0 }, { 0, 1 });
 
-	PieceContainer& king = board.getPiece(Location(0, 1));
+	cout << board;
 
-	cout << board.calculatePossiblePosition({ 0, 1 });
+	board.rollback();
 
 	cout << board;
+
 }

@@ -1,4 +1,4 @@
-#include "Rock.hpp"
+ï»¿#include "Rock.hpp"
 #include "Board.hpp";
 
 using namespace model;
@@ -23,9 +23,9 @@ list<Location> Rock::getPossiblePositions(Location& loc) const
 				cout << x << " " << y << endl;
 
 				PieceContainer& pieceCtr = Board::getInstance().getBoardContainer()[x][y];
-				// On ajoute la pièce seulement si et seulement si
-				// La pièce n'est pas limitée par une pièce d'une même équipe
-				// ET qu'elle n'a la possibilité que de manger une seule pièce.
+				// On ajoute la piÃ¨ce seulement si et seulement si
+				// La piÃ¨ce n'est pas limitÃ©e par une piÃ¨ce d'une mÃªme Ã©quipe
+				// ET qu'elle n'a la possibilitÃ© que de manger une seule piÃ¨ce.
 				//cout << x << " " << y << endl;
 				if (pieceCtr.has_value()) {
 					Piece& piece = **pieceCtr;

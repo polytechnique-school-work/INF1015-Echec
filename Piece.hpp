@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <list>
+#include <vector>
 #include <optional>
 #include <memory>
 
@@ -10,8 +11,9 @@ namespace model {
 	class Piece;
 
 	using Location = std::pair<int, int>;
-	using PieceContainer = std::optional<std::unique_ptr<Piece>>;
+	using PieceContainer = std::optional<std::shared_ptr<Piece>>;
 	using BoardContainer = std::unique_ptr<std::unique_ptr<PieceContainer[]>[]>;
+	using Pieces = std::vector<PieceContainer>;
 
 	enum class Team
 	{
@@ -22,8 +24,9 @@ namespace model {
 	public:
 		Piece(Team team) : team(team) {};
 		Team getTeam();
-		void setPieceMove();
-		bool hasAlreadyMove() const;
+		void incrementMoves();
+		void decrementMoves();
+		bool getMoves() const;
 		virtual std::list<Location> getPossiblePositions(Location& loc) const = 0;
 		virtual void display(std::ostream& out) const = 0;
 		friend std::ostream& operator<<(std::ostream& out, const Piece& piece);
@@ -31,6 +34,6 @@ namespace model {
 	protected:
 		Team team;
 	private:
-		bool hasMove = false;
+		int moves = 0;
 	};
 }

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Board.hpp"
 
-namespace {
+namespace model {
 
 	class Game {
 	public:
@@ -10,5 +10,4 @@ namespace {
 		Team turn = Team::WHITE;
 		std::optional<Team> winner;
 	};
-
 }

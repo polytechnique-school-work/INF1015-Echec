@@ -1,6 +1,13 @@
 #include "King.hpp"
 
 using namespace model;
+model::King::King(Team team): Piece(team)
+{
+	if (instanceCount == 2) {
+		throw std::logic_error("Impossible de créer plus de deux rois.");
+	}
+	instanceCount += 1;
+}
 std::list<Location> King::getPossiblePositions(Location& loc) const
 {
 	// Les positions ont ete reprises de mon ancien jeu d'echec en python : https://github.com/Sportek/chess
@@ -10,3 +17,5 @@ std::list<Location> King::getPossiblePositions(Location& loc) const
 void King::display(std::ostream& out) const {
 	out << "K";
 }
+
+int King::instanceCount = 0;

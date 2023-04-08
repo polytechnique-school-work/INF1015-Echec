@@ -1,21 +1,20 @@
-#pragma once
+ï»¿#pragma once
+#include "Piece.hpp"
 namespace model {
 
 	class History
 	{
-		History();
+	public:
+		History(Location before, Location after);
 		~History();
 	private:
-		char piece;
+		PieceContainer beforePiece;
 
-		// Le player qui a fait le déplacement
-		char team;
+		PieceContainer afterPiece;
 
-		// L'emplacement initial de la pièce
-		//Location before;
+		Location before;
 
-		// L'emplacement final de la pièce
-		//Location after;
+		Location after;
 	};
 }
 
