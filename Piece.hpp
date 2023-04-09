@@ -17,6 +17,7 @@ namespace model {
 
 	std::ostream& operator<<(std::ostream& out, const std::list<Location>& locations);
 	std::ostream& operator<<(std::ostream& out, const Location& loc);
+	std::ostream& operator<<(std::ostream& out, const PieceContainer& piece);
 
 	enum class Team
 	{

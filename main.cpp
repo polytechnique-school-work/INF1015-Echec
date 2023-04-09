@@ -35,6 +35,8 @@ void initialiserBibliothequeCours([[maybe_unused]] int argc, [[maybe_unused]] ch
 
 namespace model {
 
+
+
 	std::ostream& operator<<(std::ostream& out, const Piece& piece) {
 		piece.display(out);
 		return out;
@@ -49,12 +51,7 @@ namespace model {
 			for (int x = 0; x < BOARD_SIZE; x++) {
 
 				auto&& piece = board.getPiece(Location(x, y));
-				if (piece.has_value()) {
-					out << (**piece);
-				}
-				else {
-					out << "X";
-				}
+				out << piece;
 
 				out << "\t";
 			}
@@ -81,6 +78,11 @@ namespace model {
 		return out;
 	}
 
+	std::ostream& operator<<(std::ostream& out, const PieceContainer& piece) {
+		piece.has_value() ? cout << (**piece) : cout << "*";
+		return out;
+	}
+
 }
 
 
@@ -92,18 +94,11 @@ int main(int argc, char *argv[])
 
 	Board& board = Board::getInstance();
 	board.printPiecePosition();
-//	Piece& rock = (**board.getPiece(Location(0, 0)));
 
 	cout << board;
 
-	cout << board.calculatePossiblePosition({3, 3});
+	//cout << board.calculatePossiblePosition({3, 3});
 
-//	board.movePiece({ 0,0 }, { 0, 1 });
-
-//	cout << board;
-
-//	board.rollback();
-
-//	cout << board;
+	board.displaySelected({ 3, 3 });
 
 }

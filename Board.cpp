@@ -48,7 +48,8 @@ Board::Board()
 {
 	// Bon c'est la méthode la moins dégueulasse que j'ai trouvé pour placer les pions.
 	// const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
-	const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
+	//const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
+	const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXWPXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
 	// Initialisation d'un tableau de 8x8 cases.
 	// Tous les éléments sont en fait des nullopt.
 	this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(8);
@@ -85,23 +86,50 @@ void model::Board::printPiecePosition()
 	}
 }
 
+void model::Board::displaySelected(Location pos)
+{
+	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
+	list<Location> selectedPiece = this->calculatePossiblePosition(pos);
+
+	cout << ligneDeSeparation << endl;
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++) {
+			auto&& piece = this->getPiece(Location(x, y));
+
+			auto it = find(selectedPiece.begin(), selectedPiece.end(), Location(x, y));
+
+			if (it != selectedPiece.end()) {
+				cout << "\033[1;31m" << piece << "\033[0m";
+			}
+			else {
+				cout << piece;
+			}
+
+
+			cout << "\t";
+		}
+
+		cout << endl;
+	}
+
+	cout << ligneDeSeparation << endl;
+
+}
+
 
 std::list<Location> Board::calculatePossiblePosition(Location pos)
 {
-
-	// TODO PLACER CE CODE QUELQUE PART! IMPORTANT
-	// Regarder si la pièce sélectionnée est de la même équipe
-	
-	
-
-	//Piece& piece = this->board.getPiece(pos);
-
 	list<Location> relativePosition = (**getPiece(pos)).getPossiblePositions(pos);
 
-
 	list<Location> positions = relativeToRealPosition(relativePosition, pos);
-
 	Piece& piece = (**this->getPiece(pos));
+	Team team = piece.getTeam();
+
+	// Regarder si la pièce sélectionnée est de la même équipe
+	positions.remove_if([&team, this](Location& location) {
+		return (this->getPiece(location)).has_value() && team == (**(this->getPiece(location))).getTeam();
+		});
 	
 	if (King* king = dynamic_cast<King*>(&piece)) {
 		Board::getInstance().removeUnsafeMove(positions, king->getTeam());
@@ -156,7 +184,7 @@ PieceContainer Board::pieceConverter(char color, char piece) {
 	case 'X':
 		return {};
 	default:
-		return {};
+		return {}; 
 	}
 }
 
@@ -209,21 +237,22 @@ bool Board::isSafeMove(Location& loc, Team& team)
 		make_shared<Rock>(Rock(opponent)),
 		make_shared<Pawn>(Pawn(opponent)),
 	};
+
 	Board& board = Board::getInstance();
 	for (shared_ptr<Piece>& piece : pieces) {
-		// FIXME Le problème vient du fait que getPossiblePositions retourne des positions relatives. Il faut changer ça...
 
 		list<Location> relativePositions = piece->getPossiblePositions(loc);
-		list<Location> positions = relativeToRealPosition(relativePositions, loc);
-		for (Location& position : positions) {
-			auto&& piece = board.getPiece(position);
+		list<Location> realPositions = board.relativeToRealPosition(relativePositions, loc);
 
-			//bool second = typeid(piece) == typeid(**board.getPiece(position));
-			if (piece) {
-				return false;
-			}
+		// Pour chacune de ces possibles positions, on regarde s'il y a une pièce à l'extrémité.
+		for (Location& pos : realPositions) {
+
+			// S'il y a une pièce du type de piece, alors ça veut dire que la loc est dangereuse.
+			PieceContainer& possiblePiece = board.getPiece(pos);
+			return !(possiblePiece.has_value() && (typeid(**possiblePiece) == typeid(*piece)) && ((**possiblePiece).getTeam() != piece->getTeam()));
 		}
 	}
+
 	return true;
 }
 

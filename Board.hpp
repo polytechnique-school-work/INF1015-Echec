@@ -40,11 +40,14 @@ namespace model {
 
 		std::list<Location> relativeToRealPosition(std::list<Location>& locations, Location pos);
 
+		// Comment déterminer si le déplacement est safe : 
+		// *	Aucun pion ne peut le manger après le déplacement aux coordonnées choisies.
 		bool isSafeMove(Location& loc, Team& team);
 		void removeUnsafeMove(std::list<Location>& possibleMoves, Team team);
 		void removeSameTeamMove(std::list<Location>& possibleMoves, Team team);
 
 		void printPiecePosition();
+		void displaySelected(Location pos);
 
 	private:
 		static std::unique_ptr<Board> $instance;
