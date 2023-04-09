@@ -38,7 +38,9 @@ namespace model {
 
 
 	std::ostream& operator<<(std::ostream& out, const Piece& piece) {
+		out << (piece.team == Team::WHITE ? "\033[1;97m" : "\033[1;30m");
 		piece.display(out);
+		out << "\033[0m";
 		return out;
 	}
 
@@ -99,6 +101,6 @@ int main(int argc, char *argv[])
 
 	//cout << board.calculatePossiblePosition({3, 3});
 
-	board.displaySelected({ 3, 3 });
+	board.displaySelected({ 4, 6 });
 
 }

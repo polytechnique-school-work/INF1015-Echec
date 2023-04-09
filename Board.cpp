@@ -100,10 +100,10 @@ void model::Board::displaySelected(Location pos)
 			auto it = find(selectedPiece.begin(), selectedPiece.end(), Location(x, y));
 
 			if (it != selectedPiece.end()) {
-				cout << "\033[1;31m" << piece << "\033[0m";
+				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
 			}
 			else {
-				cout << piece;
+				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
 			}
 
 
