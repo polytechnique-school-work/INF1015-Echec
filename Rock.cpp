@@ -8,34 +8,28 @@ list<Location> Rock::getPossiblePositions(Location& loc) const
 {
 	std::list<Location> locations = {};
 
+	list<Location> possiblesMoves = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
 
-	for (int i = -1; i < 1; i += 2)
-	{
-		for (int j = 0; j < 2; j++)
-		{
-			for (int k = 1; k <= 8; k++) {
-				pair<int, int> possibilities[] = { {0, k}, {k, 0} };
-				int relX = possibilities[j].first;
-				int relY = possibilities[j].second;
-				int x = relX + loc.first;
-				int y = relY + loc.second;
-				if (x < 0 || x > 7 || y < 0 || y > 7) continue;
+	for (Location& location : possiblesMoves) {
+		for (int i = 1; i < 8; i++) {
+			Location relative = {location.first * i, location.second * i};
+			Location real = { relative.first + loc.first, relative.second + loc.second};
+			cout << relative.first << " " << relative.second << endl;
 
-				PieceContainer& pieceCtr = Board::getInstance().getBoardContainer()[x][y];
-				// On ajoute la pièce seulement si et seulement si
-				// La pièce n'est pas limitée par une pièce d'une même équipe
-				// ET qu'elle n'a la possibilité que de manger une seule pièce.
-				//cout << x << " " << y << endl;
-				if (pieceCtr.has_value()) {
-					Piece& piece = **pieceCtr;
-					if (piece.getTeam() == this->team) {
-						break;
-					}
-					locations.push_back({ relX, relY });
-					break;
-				}
-				locations.push_back({ relX, relY });
+			if (real.first < 0 || real.first > 7 || real.second < 0 || real.second > 7) {
+				continue;
 			}
+
+			PieceContainer& pieceCtr = Board::getInstance().getBoardContainer()[real.first][real.second];
+			// On ajoute la pièce seulement si et seulement si
+			// La pièce n'est pas limitée par une pièce d'une même équipe
+			// ET qu'elle n'a la possibilité que de manger une seule pièce.
+			if (pieceCtr.has_value()) {
+				Piece& piece = **pieceCtr;
+				if (piece.getTeam() != this->team) locations.push_back({ relative.first, relative.second });
+				break;
+			}
+			locations.push_back({ relative.first, relative.second });
 		}
 	}
 	return locations;
