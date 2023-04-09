@@ -45,31 +45,15 @@ std::list<Location> Board::possibleMoves(Location src)
 	return (**piece).getPossiblePositions(src);
 }
 
+
+
+
 Board::Board()
 {
 	// Bon c'est la méthode la moins dégueulasse que j'ai trouvé pour placer les pions.
-	// const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
-	//const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
-	const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXWPXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
-	if (defaultBoard.size() != static_cast<unsigned long long>(BOARD_SIZE) * BOARD_SIZE * 2) throw logic_error("Le defaultBoard doit être de BOARD_SIZE * BOARD_SIZE cases.");
-	
-
-	// Initialisation d'un tableau de 8x8 cases.
-	// Tous les éléments sont en fait des nullopt.
-	this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(8);
-	for (int i = 0; i < 8; ++i)
-		board[i] = std::make_unique<PieceContainer[]>(8);
-
-	int actual = 0;
-	for (int y = 0; y < BOARD_SIZE; ++y) {
-		for (int x = 0; x < BOARD_SIZE; ++x) {
-			// Le gros truc bizarre c'est une proposition de l'IDE
-			PieceContainer piece = this->pieceConverter(defaultBoard[actual], defaultBoard[static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(actual) + 1]);
-			board[x][y] = piece;
-			this->pieces.push_back(piece);
-			actual += 2;
-		}
-	}
+	// const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
+	// const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXWPXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
+	// generateBoard(defaultBoard);
 }
 
 bool Board::isMovePossible(Location src, Location dst)
@@ -78,82 +62,6 @@ bool Board::isMovePossible(Location src, Location dst)
 	auto it = find(possibleMoves.begin(), possibleMoves.end(), dst);
 	return it != possibleMoves.end();
 }
-// (x: " << j << " y: " << i << ")"
-void model::Board::printPiecePosition()
-{
-	for (int i = 0; i < BOARD_SIZE; i++) {
-		for (int j = 0; j < BOARD_SIZE; j++) {
-			if (board[j][i].has_value()) {
-				cout << typeid((**board[j][i])).name() << "\t" << Location(j, i) << endl;
-			}
-		}
-	}
-}
-
-void model::Board::displaySelected(Location pos)
-{
-	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
-
-	Piece& piece = **this->getPiece(pos);
-	list<Location> selectedPiece = this->calculateKingSafePosition(piece,pos);
-
-	cout << ligneDeSeparation << endl;
-	for (int y = 0; y < BOARD_SIZE; y++)
-	{
-		for (int x = 0; x < BOARD_SIZE; x++) {
-			auto&& piece = this->getPiece(Location(x, y));
-
-			auto it = find(selectedPiece.begin(), selectedPiece.end(), Location(x, y));
-
-			if (it != selectedPiece.end()) {
-				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
-			}
-			else {
-				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
-			}
-
-
-			cout << "\t";
-		}
-
-		cout << endl;
-	}
-
-	cout << ligneDeSeparation << endl;
-
-}
-
-void model::Board::displayWithList(list<Location> positions)
-{
-	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
-
-
-	cout << ligneDeSeparation << endl;
-	for (int y = 0; y < BOARD_SIZE; y++)
-	{
-		for (int x = 0; x < BOARD_SIZE; x++) {
-			auto&& piece = this->getPiece(Location(x, y));
-
-			auto it = find(positions.begin(), positions.end(), Location(x, y));
-
-			if (it != positions.end()) {
-				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
-			}
-			else {
-				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
-			}
-
-
-			cout << "\t";
-		}
-
-		cout << endl;
-	}
-
-	cout << ligneDeSeparation << endl;
-}
-
-
 
 
 std::list<Location> Board::calculatePossiblePosition(Piece& piece, Location pos)
@@ -184,6 +92,31 @@ std::list<Location> model::Board::calculateKingSafePosition(Piece& piece, Locati
 void model::Board::rollback()
 {
 	this->history.pop();
+}
+
+void model::Board::generateBoard(const std::string& defaultBoard)
+{
+	if (defaultBoard.size() != static_cast<unsigned long long>(BOARD_SIZE) * BOARD_SIZE * 2) throw logic_error("Le defaultBoard doit être de BOARD_SIZE * BOARD_SIZE cases.");
+
+	// Reset des pièces.
+	this->pieces = Pieces();
+
+	// Initialisation d'un tableau de 8x8 cases.
+	// Tous les éléments sont en fait des nullopt.
+	this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(8);
+	for (int i = 0; i < 8; ++i)
+		board[i] = std::make_unique<PieceContainer[]>(8);
+
+	int actual = 0;
+	for (int y = 0; y < BOARD_SIZE; ++y) {
+		for (int x = 0; x < BOARD_SIZE; ++x) {
+			// Le gros truc bizarre c'est une proposition de l'IDE
+			PieceContainer piece = this->pieceConverter(defaultBoard[actual], defaultBoard[static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(actual) + 1]);
+			board[x][y] = piece;
+			this->pieces.push_back(piece);
+			actual += 2;
+		}
+	}
 }
 
 bool model::Board::isEchec(Location& loc, Team& team)
@@ -323,4 +256,86 @@ void model::Board::removeSameTeamMove(std::list<Location>& possibleMoves, Team t
 			if (pieceAtLocation.getTeam() == team) possibleMoves.remove(location);
 		}
 	}
+}
+
+
+
+/*
+
+	PRINTER : Surtout pour du débug
+
+*/
+
+void model::Board::printPiecePosition()
+{
+	for (int i = 0; i < BOARD_SIZE; i++) {
+		for (int j = 0; j < BOARD_SIZE; j++) {
+			if (board[j][i].has_value()) {
+				cout << typeid((**board[j][i])).name() << "\t" << Location(j, i) << endl;
+			}
+		}
+	}
+}
+
+void model::Board::displaySelected(Location pos)
+{
+	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
+
+	Piece& piece = **this->getPiece(pos);
+	list<Location> selectedPiece = this->calculateKingSafePosition(piece, pos);
+
+	cout << ligneDeSeparation << endl;
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++) {
+			auto&& piece = this->getPiece(Location(x, y));
+
+			auto it = find(selectedPiece.begin(), selectedPiece.end(), Location(x, y));
+
+			if (it != selectedPiece.end()) {
+				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
+			}
+			else {
+				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
+			}
+
+
+			cout << "\t";
+		}
+
+		cout << endl;
+	}
+
+	cout << ligneDeSeparation << endl;
+
+}
+
+void model::Board::displayWithList(list<Location> positions)
+{
+	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
+
+
+	cout << ligneDeSeparation << endl;
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++) {
+			auto&& piece = this->getPiece(Location(x, y));
+
+			auto it = find(positions.begin(), positions.end(), Location(x, y));
+
+			if (it != positions.end()) {
+				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
+			}
+			else {
+				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
+			}
+
+
+			cout << "\t";
+		}
+
+		cout << endl;
+	}
+
+	cout << ligneDeSeparation << endl;
 }

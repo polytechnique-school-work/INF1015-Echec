@@ -1,5 +1,6 @@
 #include "History.hpp"
 #include "Board.hpp"
+#include "Game.hpp"
 
 model::History::~History()
 {
@@ -7,6 +8,7 @@ model::History::~History()
 	board[this->after.first][this->after.second] = this->beforePiece;
 	board[this->before.first][this->before.second] = this->afterPiece;
 	(**this->beforePiece).decrementMoves();
+	Game::getInstance().nextTurn();
 }
 
 model::History::History(Location before, Location after) : before(before), after(after)

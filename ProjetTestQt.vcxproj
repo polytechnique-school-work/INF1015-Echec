@@ -119,6 +119,15 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="ChessWindow.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="EchecTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="googletest\src\gtest-all.cc" />
     <ClCompile Include="History.cpp" />
     <ClCompile Include="King.cpp" />
@@ -135,6 +144,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <QtMoc Include="ChessWindow.hpp">
+      <SubType>
+      </SubType>
+    </QtMoc>
     <ClInclude Include="Game.hpp">
       <SubType>
       </SubType>
@@ -148,7 +161,25 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Queen.hpp" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Rock.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="black_bishop.png" />
+    <Image Include="black_king.png" />
+    <Image Include="black_knight.png" />
+    <Image Include="black_pawn.png" />
+    <Image Include="black_queen.png" />
+    <Image Include="black_rock.png" />
+    <Image Include="white_bishop.png" />
+    <Image Include="white_king.png" />
+    <Image Include="white_knight.png" />
+    <Image Include="white_pawn.png" />
+    <Image Include="white_queen.png" />
+    <Image Include="white_rock.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

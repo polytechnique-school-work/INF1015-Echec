@@ -10,7 +10,6 @@ namespace model {
 
 	static constexpr int BOARD_SIZE = 8;
 
-
 	class Board {
 	public:
 		void movePiece(Location src, Location dst);
@@ -26,6 +25,8 @@ namespace model {
 		std::list<Location> calculateKingSafePosition(Piece& piece, Location pos);
 
 		void rollback();
+
+		void generateBoard(const std::string& defaultBoard);
 
 		// Savoir si le roi à sa position actuel est en danger.
 		bool isEchec(Location& loc, Team& team);

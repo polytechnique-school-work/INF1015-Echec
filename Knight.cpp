@@ -11,3 +11,8 @@ void Knight::display(std::ostream& out) const {
 	out << "C";
 }
 
+std::string& model::Knight::getName()
+{
+	return name;
+}
+

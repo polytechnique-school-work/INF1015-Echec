@@ -37,3 +37,8 @@ list<Location> Rock::getPossiblePositions(Location& loc) const
 void Rock::display(std::ostream& out) const {
 	out << "R";
 }
+
+std::string& model::Rock::getName()
+{
+	return name;
+}

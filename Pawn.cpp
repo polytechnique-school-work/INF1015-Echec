@@ -3,8 +3,7 @@
 using namespace model;
 std::list<Location> Pawn::getPossiblePositions(Location& loc) const
 {
-	// TODO : Le pion mange en diagonale, à changer!
-	// À refaire pour éviter qu'il saute par dessus un pion.
+	// TODO : En passant : si le dernier pion a bougé de 2, il peut le manger (regarder l'historique).
 	Board& board = Board::getInstance();
 	int position = this->team == Team::WHITE ? -1 : 1;
 	std::list<Location> locations = {};
@@ -23,4 +22,9 @@ std::list<Location> Pawn::getPossiblePositions(Location& loc) const
 }
 void Pawn::display(std::ostream& out) const {
 	out << "P";
+}
+
+std::string& model::Pawn::getName()
+{
+	return name;
 }

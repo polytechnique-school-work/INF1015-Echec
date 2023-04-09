@@ -61,6 +61,15 @@
     <ClCompile Include="History.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EchecTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Piece.hpp">
@@ -93,5 +102,54 @@
     <ClInclude Include="History.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="ChessWindow.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="black_bishop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="black_king.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="black_knight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="black_pawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="black_queen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="white_bishop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="white_king.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="white_knight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="white_pawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="white_queen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="black_rock.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="white_rock.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

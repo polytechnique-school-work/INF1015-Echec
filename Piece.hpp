@@ -31,12 +31,14 @@ namespace model {
 		void incrementMoves();
 		void decrementMoves();
 		bool getMoves() const;
+		std::string& getName();
 		virtual std::list<Location> getPossiblePositions(Location& loc) const = 0;
 		virtual void display(std::ostream& out) const = 0;
 		friend std::ostream& operator<<(std::ostream& out, const Piece& piece);
 		virtual ~Piece() = default;
 	protected:
 		Team team;
+		std::string name;
 	private:
 		int moves = 0;
 	};
