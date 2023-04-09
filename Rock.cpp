@@ -14,7 +14,6 @@ list<Location> Rock::getPossiblePositions(Location& loc) const
 		for (int i = 1; i < 8; i++) {
 			Location relative = {location.first * i, location.second * i};
 			Location real = { relative.first + loc.first, relative.second + loc.second};
-			cout << relative.first << " " << relative.second << endl;
 
 			if (real.first < 0 || real.first > 7 || real.second < 0 || real.second > 7) {
 				continue;

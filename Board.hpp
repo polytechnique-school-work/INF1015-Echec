@@ -21,7 +21,9 @@ namespace model {
 
 		friend std::ostream& operator<<(std::ostream& out, const Board& board);
 
-		std::list<Location> calculatePossiblePosition(Location pos);
+		std::list<Location> calculatePossiblePosition(Piece& piece, Location pos);
+
+		std::list<Location> calculateKingSafePosition(Piece& piece, Location pos);
 
 		void rollback();
 
@@ -48,6 +50,7 @@ namespace model {
 
 		void printPiecePosition();
 		void displaySelected(Location pos);
+		void displayWithList(std::list<Location> positions);
 
 	private:
 		static std::unique_ptr<Board> $instance;

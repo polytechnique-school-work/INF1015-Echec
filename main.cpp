@@ -88,19 +88,29 @@ namespace model {
 }
 
 
+
+
+void executer() {
+
+	Board& board = Board::getInstance();
+	// board.printPiecePosition();
+
+	board.displaySelected({ 3, 3 });
+
+}
+
+
 int main(int argc, char *argv[])
 {
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);
 
-	Board& board = Board::getInstance();
-	board.printPiecePosition();
+	auto start = std::chrono::high_resolution_clock::now();
 
-	cout << board;
+	executer();
 
-	//cout << board.calculatePossiblePosition({3, 3});
-
-	board.displaySelected({ 4, 6 });
-
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+	std::cout << std::endl << std::endl <<  "Temps d'execution: " << duration.count()/1000 << " ms" << std::endl;
 }

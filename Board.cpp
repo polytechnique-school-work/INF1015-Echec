@@ -8,6 +8,7 @@
 #include "Knight.hpp"
 #include <iostream>
 
+
 using namespace std;
 using namespace model;
 
@@ -89,7 +90,9 @@ void model::Board::printPiecePosition()
 void model::Board::displaySelected(Location pos)
 {
 	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
-	list<Location> selectedPiece = this->calculatePossiblePosition(pos);
+
+	Piece& piece = **this->getPiece(pos);
+	list<Location> selectedPiece = this->calculateKingSafePosition(piece,pos);
 
 	cout << ligneDeSeparation << endl;
 	for (int y = 0; y < BOARD_SIZE; y++)
@@ -117,25 +120,62 @@ void model::Board::displaySelected(Location pos)
 
 }
 
-
-std::list<Location> Board::calculatePossiblePosition(Location pos)
+void model::Board::displayWithList(list<Location> positions)
 {
-	list<Location> relativePosition = (**getPiece(pos)).getPossiblePositions(pos);
+	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
+
+
+	cout << ligneDeSeparation << endl;
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++) {
+			auto&& piece = this->getPiece(Location(x, y));
+
+			auto it = find(positions.begin(), positions.end(), Location(x, y));
+
+			if (it != positions.end()) {
+				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
+			}
+			else {
+				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
+			}
+
+
+			cout << "\t";
+		}
+
+		cout << endl;
+	}
+
+	cout << ligneDeSeparation << endl;
+}
+
+
+
+
+std::list<Location> Board::calculatePossiblePosition(Piece& piece, Location pos)
+{
+	list<Location> relativePosition = piece.getPossiblePositions(pos);
 
 	list<Location> positions = relativeToRealPosition(relativePosition, pos);
-	Piece& piece = (**this->getPiece(pos));
 	Team team = piece.getTeam();
 
 	// Regarder si la pièce sélectionnée est de la même équipe
 	positions.remove_if([&team, this](Location& location) {
 		return (this->getPiece(location)).has_value() && team == (**(this->getPiece(location))).getTeam();
 		});
-	
-	if (King* king = dynamic_cast<King*>(&piece)) {
-		Board::getInstance().removeUnsafeMove(positions, king->getTeam());
-	}
 
 	return positions;
+}
+
+std::list<Location> model::Board::calculateKingSafePosition(Piece& piece, Location pos)
+{
+	list<Location> locations =  calculatePossiblePosition(piece, pos);
+
+	if (King* king = dynamic_cast<King*>(&piece)) {
+		Board::getInstance().removeUnsafeMove(locations, king->getTeam());
+	}
+	return locations;
 }
 
 void model::Board::rollback()
@@ -225,34 +265,44 @@ list<Location> model::Board::relativeToRealPosition(list<Location>& relativePosi
 
 bool Board::isSafeMove(Location& loc, Team& team)
 {
-	Team opponent = team == Team::WHITE ? Team::BLACK : Team::WHITE;
+	// Team opponent = team == Team::WHITE ? Team::BLACK : Team::WHITE;
 
 	// TODO : Faire des tests de rapidité, si ce serait pas plus rapide de faire 2 listes de vecteurs selon la team
 	// et de les garder en variable static déjà déclaré et choisir en fonction de ce qu'on a besoin.
 	vector<shared_ptr<Piece>> pieces = {
-		make_shared<Queen>(Queen(opponent)),
-		make_shared<Bishop>(Bishop(opponent)),
-		make_shared<King>(King(opponent, true)),
-		make_shared<Knight>(Knight(opponent)),
-		make_shared<Rock>(Rock(opponent)),
-		make_shared<Pawn>(Pawn(opponent)),
+		make_shared<Queen>(Queen(team)),
+		make_shared<Bishop>(Bishop(team)),
+		make_shared<King>(King(team, true)),
+		make_shared<Knight>(Knight(team)),
+		make_shared<Rock>(Rock(team)),
+		make_shared<Pawn>(Pawn(team)),
 	};
 
 	Board& board = Board::getInstance();
 	for (shared_ptr<Piece>& piece : pieces) {
 
-		list<Location> relativePositions = piece->getPossiblePositions(loc);
-		list<Location> realPositions = board.relativeToRealPosition(relativePositions, loc);
+		list<Location> realPositions = board.calculatePossiblePosition(*piece, loc);// piece->getPossiblePositions(loc);
 
 		// Pour chacune de ces possibles positions, on regarde s'il y a une pièce à l'extrémité.
 		for (Location& pos : realPositions) {
 
 			// S'il y a une pièce du type de piece, alors ça veut dire que la loc est dangereuse.
+			// cout << pos << endl;
 			PieceContainer& possiblePiece = board.getPiece(pos);
-			return !(possiblePiece.has_value() && (typeid(**possiblePiece) == typeid(*piece)) && ((**possiblePiece).getTeam() != piece->getTeam()));
+
+			// On regarde si la position contient une pièce.
+			if (possiblePiece.has_value()) {
+				Piece& selectedPiece = **possiblePiece;
+				// Si les deux pièces sont du même type, on s'en fou. Elle devrait pas le manger.
+				if (selectedPiece.getTeam() != piece->getTeam()) {
+					// Si les types des pièces sont les mêmes, y'a présence de danger.
+					if (typeid(selectedPiece) == typeid(*piece)) {
+						return false;
+					}
+				}
+			}
 		}
 	}
-
 	return true;
 }
 
