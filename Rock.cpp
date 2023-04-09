@@ -11,11 +11,11 @@ list<Location> Rock::getPossiblePositions(Location& loc) const
 	list<Location> possiblesMoves = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
 
 	for (Location& location : possiblesMoves) {
-		for (int i = 1; i < 8; i++) {
+		for (int i = 1; i < BOARD_SIZE; i++) {
 			Location relative = {location.first * i, location.second * i};
 			Location real = { relative.first + loc.first, relative.second + loc.second};
 
-			if (real.first < 0 || real.first > 7 || real.second < 0 || real.second > 7) {
+			if (real.first < 0 || real.first >= BOARD_SIZE || real.second < 0 || real.second >= BOARD_SIZE) {
 				continue;
 			}
 

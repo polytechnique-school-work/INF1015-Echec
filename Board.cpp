@@ -51,6 +51,9 @@ Board::Board()
 	// const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
 	//const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
 	const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXWPXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
+	if (defaultBoard.size() != static_cast<unsigned long long>(BOARD_SIZE) * BOARD_SIZE * 2) throw logic_error("Le defaultBoard doit être de BOARD_SIZE * BOARD_SIZE cases.");
+	
+
 	// Initialisation d'un tableau de 8x8 cases.
 	// Tous les éléments sont en fait des nullopt.
 	this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(8);
@@ -58,8 +61,8 @@ Board::Board()
 		board[i] = std::make_unique<PieceContainer[]>(8);
 
 	int actual = 0;
-	for (int y = 0; y < 8; ++y) {
-		for (int x = 0; x < 8; ++x) {
+	for (int y = 0; y < BOARD_SIZE; ++y) {
+		for (int x = 0; x < BOARD_SIZE; ++x) {
 			// Le gros truc bizarre c'est une proposition de l'IDE
 			PieceContainer piece = this->pieceConverter(defaultBoard[actual], defaultBoard[static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(actual) + 1]);
 			board[x][y] = piece;
@@ -78,8 +81,8 @@ bool Board::isMovePossible(Location src, Location dst)
 // (x: " << j << " y: " << i << ")"
 void model::Board::printPiecePosition()
 {
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
+	for (int i = 0; i < BOARD_SIZE; i++) {
+		for (int j = 0; j < BOARD_SIZE; j++) {
 			if (board[j][i].has_value()) {
 				cout << typeid((**board[j][i])).name() << "\t" << Location(j, i) << endl;
 			}
@@ -254,7 +257,7 @@ list<Location> model::Board::relativeToRealPosition(list<Location>& relativePosi
 		Location realLocation = { loc.first + pos.first, loc.second + pos.second };
 
 		// Regarder si la pièce se situe à l'extérieur du tableau
-		if (realLocation.first < 0 || realLocation.first > 8 || realLocation.second < 0 || realLocation.second > 8) continue;
+		if (realLocation.first < 0 || realLocation.first > BOARD_SIZE || realLocation.second < 0 || realLocation.second > BOARD_SIZE) continue;
 
 		// Normalement tout devrait avoir été calculé
 		positions.push_back(realLocation);

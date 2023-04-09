@@ -87,13 +87,12 @@ namespace model {
 
 }
 
-
-
-
 void executer() {
 
 	Board& board = Board::getInstance();
 	// board.printPiecePosition();
+
+	// board.calculateKingSafePosition(**board.getPiece({3,3}), {3,3});
 
 	board.displaySelected({ 3, 3 });
 
@@ -112,5 +111,5 @@ int main(int argc, char *argv[])
 
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-	std::cout << std::endl << std::endl <<  "Temps d'execution: " << duration.count()/1000 << " ms" << std::endl;
+	std::cout << std::endl << std::endl <<  "Temps d'execution: " << duration.count() << " microsecondes" << std::endl;
 }
