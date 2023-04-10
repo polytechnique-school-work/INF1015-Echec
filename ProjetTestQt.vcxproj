@@ -137,10 +137,18 @@
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rock.cpp" />
+    <ClCompile Include="VueGame.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bishop.hpp" />
     <ClInclude Include="Board.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="VueGame.hpp">
       <SubType>
       </SubType>
     </ClInclude>

@@ -38,7 +38,7 @@ void Rock::display(std::ostream& out) const {
 	out << "R";
 }
 
-std::string& model::Rock::getName()
+std::string model::Rock::getName()
 {
-	return name;
+	return "rock";
 }

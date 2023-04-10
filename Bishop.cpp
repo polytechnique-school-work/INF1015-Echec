@@ -39,8 +39,8 @@ void Bishop::display(std::ostream& out) const {
 	out << "F";
 }
 
-std::string& model::Bishop::getName()
+std::string model::Bishop::getName()
 {
-	return name;
+	return "bishop";
 }
 

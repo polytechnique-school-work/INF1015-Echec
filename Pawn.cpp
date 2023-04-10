@@ -24,7 +24,7 @@ void Pawn::display(std::ostream& out) const {
 	out << "P";
 }
 
-std::string& model::Pawn::getName()
+std::string model::Pawn::getName()
 {
-	return name;
+	return "pawn";
 }

@@ -26,9 +26,9 @@ void King::display(std::ostream& out) const {
 	out << "K";
 }
 
-std::string& model::King::getName()
+std::string model::King::getName()
 {
-	return name;
+	return "king";
 }
 
 int King::instanceCount = 0;

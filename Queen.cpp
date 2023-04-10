@@ -17,8 +17,8 @@ void Queen::display(std::ostream& out) const {
 	out << "Q";
 }
 
-std::string& model::Queen::getName()
+std::string model::Queen::getName()
 {
-	return name;
+	return "queen";
 }
 

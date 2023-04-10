@@ -22,7 +22,7 @@ bool Piece::getMoves() const
     return this->moves;
 }
 
-std::string& model::Piece::getName()
+std::string model::Piece::getName()
 {
-    return name;
+    return "piece";
 }

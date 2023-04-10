@@ -96,11 +96,6 @@ void executer() {
 	const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
 
 	board.generateBoard(defaultBoard);
-
-	// board.calculateKingSafePosition(**board.getPiece({3,3}), {3,3});
-
-	// board.displaySelected({ 3, 3 });
-
 }
 
 
@@ -109,17 +104,8 @@ int main(int argc, char *argv[])
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);
-
-	auto start = std::chrono::high_resolution_clock::now();
-
 	executer();
-
-	auto end = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-	std::cout << std::endl << std::endl <<  "Temps d'execution: " << duration.count() << " microsecondes" << std::endl;
-
-
 	ChessWindow chessWindow = ChessWindow();
-	chessWindow.show();
+	chessWindow.show(); 
 	return app.exec();
 }

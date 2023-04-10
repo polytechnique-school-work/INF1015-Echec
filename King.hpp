@@ -10,11 +10,10 @@ namespace model {
 		~King();
 		std::list<Location> getPossiblePositions(Location& loc) const;
 		void display(std::ostream& out) const;
-		std::string& getName();
+		std::string getName();
 	private:
 		bool bypass;
 		static int instanceCount;
-		std::string name = "king";
 	};
 
 }
