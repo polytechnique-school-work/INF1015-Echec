@@ -1,12 +1,14 @@
 ﻿#include <memory>
+#include <optional>
 #include "Board.hpp"
 namespace vue {
 	class Game {
 	public:
 		static Game& getInstance();
-		model::Location& getSelected();
+		std::optional<model::Location>& getSelected();
+		void setSelected(std::optional<model::Location> loc);
 	private:
 		static std::unique_ptr<Game> $instance;
-		model::Location selected;
+		std::optional<model::Location> selected;
 	};
 }

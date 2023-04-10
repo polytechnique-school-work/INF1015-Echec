@@ -7,6 +7,7 @@ namespace model {
 	public:
 		void nextTurn();
 		static Game& getInstance();
+		Team& getTurn();
 	private:
 		static std::unique_ptr<Game> $instance;
 		Team turn = Team::WHITE;

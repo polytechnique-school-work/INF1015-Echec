@@ -11,7 +11,13 @@ Game& vue::Game::getInstance()
 	return *$instance;
 }
 
-model::Location& vue::Game::getSelected()
+std::optional<model::Location>& vue::Game::getSelected()
 {
 	return selected;
 }
+
+void vue::Game::setSelected(std::optional<model::Location> loc)
+{
+	selected = loc;
+}
+

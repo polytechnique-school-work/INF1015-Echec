@@ -42,7 +42,8 @@ std::list<Location> Board::possibleMoves(Location src)
 	//			et celles qui sont pas possibles.
  
 	PieceContainer& piece = this->getPiece(src);
-	return (**piece).getPossiblePositions(src);
+	Board& board = Board::getInstance();
+	return board.calculateKingSafePosition(**piece, src);
 }
 
 

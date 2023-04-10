@@ -16,3 +16,8 @@ Game& model::Game::getInstance()
 	}
 	return *$instance;
 }
+
+Team& model::Game::getTurn()
+{
+	return turn;
+}

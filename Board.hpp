@@ -52,10 +52,10 @@ namespace model {
 		void printPiecePosition();
 		void displaySelected(Location pos);
 		void displayWithList(std::list<Location> positions);
+		bool isMovePossible(Location src, Location dst);
 
 	private:
 		static std::unique_ptr<Board> $instance;
-		bool isMovePossible(Location src, Location dst);
 		BoardContainer board;
 		Pieces pieces;
 

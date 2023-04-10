@@ -7,6 +7,10 @@
 #include <QtWidgets/QGraphicsBlurEffect>
 #include <QtGui/QPixmap>
 
+#include "Game.hpp"
+
+#include "VueGame.hpp"
+
 #include <iostream>
 #include "Board.hpp"
 
@@ -98,7 +102,50 @@ std::string ChessWindow::getImage(model::Piece& piece)
 
 void ChessWindow::onClickChess(model::Location loc)
 {
-    std::cout << loc << std::endl;
+
+
+    model::Board& board = model::Board::getInstance();
+    vue::Game& vueGame = vue::Game::getInstance();
+    model::Game& modelGame = model::Game::getInstance();
+
+
+    // S'il y a une pièce sélectionnée et qu'il appuie sur une position
+    // possible de la pièce, déplacer.
+    if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc)) {
+       // if(modelGame.getTurn() == )
+        board.movePiece(*vueGame.getSelected(), loc);
+        modelGame.nextTurn();
+        vueGame.setSelected({});
+        refreshWindow();
+        return;
+    }
+
+    // Si le gars appuie dans le vide, reset.
+    PieceContainer& pieceCtr = board.getPiece(loc);
+    if (!pieceCtr.has_value()) {
+        vueGame.setSelected({});
+        refreshWindow();
+        return;
+    }
+
+    Team& team = modelGame.getTurn();
+    
+    Piece& piece = **pieceCtr;
+
+    // Si le gars appuie sur une de ses pièces : display ses positions possible.
+    if (piece.getTeam() == team) {
+        vueGame.setSelected(loc);
+        refreshWindow();
+        return;
+    }
+
+
+    // Si le gars clique sur une pièce qui n'est pas la sienne.
+    if (piece.getTeam() != team) {
+        vueGame.setSelected({});
+        refreshWindow();
+        return;
+    }
 }
 
 ClickableLabel::ClickableLabel(QWidget* parent, Qt::WindowFlags f) : QLabel(parent)
