@@ -26,11 +26,12 @@ void Board::movePiece(Location src, Location dst)
 	//	return;
 	//}
 
-
 	this->board[dst.first][dst.second] = move(this->board[src.first][src.second]);
 	this->board[src.first][src.second] = {};
 	(**this->getPiece(dst)).incrementMoves();
-	this->history.push(History(src, dst));
+
+	unique_ptr<History> ptrHistory(new History(src, dst));
+	this->history.push(move(ptrHistory));
 
 	// TODO Compter les pièces et la retirer des pièces actives.
 }

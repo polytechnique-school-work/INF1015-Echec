@@ -92,7 +92,7 @@ namespace model {
 void executer() {
 
 	Board& board = Board::getInstance();
-	// board.printPiecePosition();
+	//board.printPiecePosition();
 	const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
 
 	board.generateBoard(defaultBoard);
@@ -104,6 +104,9 @@ int main(int argc, char *argv[])
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);
+
+	Board& board = Board::getInstance();
+
 	executer();
 	ChessWindow chessWindow = ChessWindow();
 	chessWindow.show(); 

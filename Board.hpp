@@ -59,7 +59,7 @@ namespace model {
 		BoardContainer board;
 		Pieces pieces;
 
-		std::stack<History> history;
+		std::stack<std::unique_ptr<History>> history;
 	};
 
 	std::ostream& operator<<(std::ostream& out, const Board& board);

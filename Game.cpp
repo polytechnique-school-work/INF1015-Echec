@@ -4,7 +4,8 @@ using namespace model;
 
 void Game::nextTurn()
 {
-	this->turn = this->turn == Team::WHITE ? Team::BLACK : Team::WHITE;
+	std::cout << "Changement d'equipe" << std::endl;
+	this->turn = (this->turn == Team::WHITE ? Team::BLACK : Team::WHITE);
 }
 
 std::unique_ptr<Game> Game::$instance = nullptr;

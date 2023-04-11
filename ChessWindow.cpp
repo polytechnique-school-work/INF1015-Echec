@@ -18,15 +18,10 @@ using namespace model;
 
 ChessWindow::ChessWindow(QWidget* parent): QMainWindow(parent)
 {
-
     Board& board = Board::getInstance();
     generateWindow();
-
-   board.movePiece({ 0,1 }, { 0,2 });
-
+    // board.movePiece({0, 6}, {0, 5});
     refreshWindow();
-
-    
 }
 
 void ChessWindow::generateWindow()
@@ -50,15 +45,6 @@ void ChessWindow::generateWindow()
             // ajouter code ici 
 
             connect(label, &ClickableLabel::clicked, this, [this, col, row]() {onClickChess({ col, row }); });
-            
-
-            Board& board = Board::getInstance();
-            PieceContainer& pieceCtr = board.getPiece({ col, row });
-            if (pieceCtr.has_value()) {
-                auto map = QPixmap(getImage(**pieceCtr).c_str());
-                label->setPixmap(map);
-                label->setScaledContents(true);
-            }
 
             grid->setSpacing(0);
             grid->addWidget(label, row, col);
@@ -102,52 +88,113 @@ std::string ChessWindow::getImage(model::Piece& piece)
 
 void ChessWindow::onClickChess(model::Location loc)
 {
-
-
+    std::cout << loc << std::endl;
     model::Board& board = model::Board::getInstance();
     vue::Game& vueGame = vue::Game::getInstance();
     model::Game& modelGame = model::Game::getInstance();
 
-
-    // S'il y a une pièce sélectionnée et qu'il appuie sur une position
-    // possible de la pièce, déplacer.
-    if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc)) {
-       // if(modelGame.getTurn() == )
-        board.movePiece(*vueGame.getSelected(), loc);
-        modelGame.nextTurn();
-        vueGame.setSelected({});
-        refreshWindow();
-        return;
-    }
-
-    // Si le gars appuie dans le vide, reset.
     PieceContainer& pieceCtr = board.getPiece(loc);
-    if (!pieceCtr.has_value()) {
-        vueGame.setSelected({});
-        refreshWindow();
-        return;
+
+    if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc))
+        this->movePiece(*vueGame.getSelected(), loc);
+
+    else if (!pieceCtr.has_value()) {
+        resetSelect();
     }
 
-    Team& team = modelGame.getTurn();
-    
-    Piece& piece = **pieceCtr;
+    else {
+        Team& team = modelGame.getTurn();
+        Piece& piece = **pieceCtr;
+        if (piece.getTeam() == team) {
+            selectPiece(loc);
+        }
+        else {
+            resetSelect();
+        }
 
-    // Si le gars appuie sur une de ses pièces : display ses positions possible.
-    if (piece.getTeam() == team) {
-        vueGame.setSelected(loc);
-        refreshWindow();
-        return;
     }
 
+    refreshWindow();
 
-    // Si le gars clique sur une pièce qui n'est pas la sienne.
-    if (piece.getTeam() != team) {
-        vueGame.setSelected({});
-        refreshWindow();
-        return;
-    }
+    //std::cout << loc << std::endl;
+
+    //model::Board& board = model::Board::getInstance();
+    //vue::Game& vueGame = vue::Game::getInstance();
+    //model::Game& modelGame = model::Game::getInstance();
+
+    //std::cout << (modelGame.getTurn() == Team::WHITE ? "White" : "Black") << std::endl;
+
+
+    //// S'il y a une pièce sélectionnée et qu'il appuie sur une position
+    //// possible de la pièce, déplacer.
+    //if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc)) {
+    //   // if(modelGame.getTurn() == )
+    //    board.movePiece(*vueGame.getSelected(), loc);
+    //    modelGame.nextTurn();
+    //    vueGame.setSelected({});
+    //    refreshWindow();
+
+    //    std::cout << "Hello 1" << std::endl;
+
+    //    return;
+    //}
+
+    //// Si le gars appuie dans le vide, reset.
+    //PieceContainer& pieceCtr = board.getPiece(loc);
+    //if (!pieceCtr.has_value()) {
+    //    vueGame.setSelected({});
+    //    refreshWindow();
+    //    std::cout << "Hello 2" << std::endl;
+    //    return;
+    //}
+
+    //Team& team = modelGame.getTurn();
+    //
+    //Piece& piece = **pieceCtr;
+
+    //// Si le gars appuie sur une de ses pièces : display ses positions possible.
+    //if (piece.getTeam() == team) {
+    //    vueGame.setSelected(loc);
+    //    refreshWindow();
+    //    std::cout << "Hello 3" << std::endl;
+    //    return;
+    //}
+
+
+    //// Si le gars clique sur une pièce qui n'est pas la sienne.
+    //if (piece.getTeam() != team) {
+    //    vueGame.setSelected({});
+    //    refreshWindow();
+    //    std::cout << "Hello 4" << std::endl;
+    //    return;
+    //}
 }
 
+void ChessWindow::selectPiece(model::Location loc)
+{
+    std::cout << "Select: " << loc << std::endl;
+    vue::Game& vueGame = vue::Game::getInstance();
+    vueGame.setSelected(loc);
+}
+
+void ChessWindow::movePiece(model::Location src, model::Location dst)
+{
+    std::cout << "MovePiece: \n" << "\tSrc: " << src << "\n" << "\tDst: " << dst <<std::endl;
+    model::Board& board = model::Board::getInstance();
+    model::Game& modelGame = model::Game::getInstance();
+
+    board.movePiece(src, dst);
+    modelGame.nextTurn();
+    resetSelect();
+}
+
+void ChessWindow::resetSelect()
+{
+    std::cout << "Reset selection" << std::endl;
+    vue::Game& vueGame = vue::Game::getInstance();
+    vueGame.setSelected({});
+
+}
 ClickableLabel::ClickableLabel(QWidget* parent, Qt::WindowFlags f) : QLabel(parent)
 {
 }
@@ -160,3 +207,4 @@ void ClickableLabel::mousePressEvent(QMouseEvent* event)
 {
     emit clicked();
 }
+
