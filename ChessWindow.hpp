@@ -16,6 +16,7 @@ public slots:
 
 private:
 	QGridLayout* grid;
+	QLabel* text;
 	void selectPiece(model::Location loc);
 	void movePiece(model::Location src, model::Location dst);
 	void resetSelect();

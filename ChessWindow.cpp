@@ -6,7 +6,7 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QGraphicsBlurEffect>
 #include <QtGui/QPixmap>
-
+#include <algorithm>
 #include "Game.hpp"
 
 #include "VueGame.hpp"
@@ -42,7 +42,6 @@ void ChessWindow::generateWindow()
             else {
                 label->setStyleSheet("background-color: rgb(209, 139, 71)");
             }
-            // ajouter code ici 
 
             connect(label, &ClickableLabel::clicked, this, [this, col, row]() {onClickChess({ col, row }); });
 
@@ -51,19 +50,23 @@ void ChessWindow::generateWindow()
         }
     }
 
-    QLabel* label = new QLabel();
-    label->setText("Test");
-    grid->addWidget(label);
+    text = new QLabel();
+    text->setText("Équipe: ");
+    grid->addWidget(text);
     
     setCentralWidget(widgetPrincipal);
 }
 
 void ChessWindow::refreshWindow()
 {
+    vue::Game& vueGame = vue::Game::getInstance();
+    Board& board = Board::getInstance();
+    model::Piece& piece = **board.getPiece(*vueGame.getSelected());
+    std::list<model::Location> possibleLocations = board.calculateKingSafePosition(piece, *vueGame.getSelected());
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
+
             QLabel* label = dynamic_cast<QLabel*>(grid->itemAtPosition(row, col)->widget());
-            Board& board = Board::getInstance();
             PieceContainer& pieceCtr = board.getPiece({ col, row });
             if (pieceCtr.has_value()) {
                 auto map = QPixmap(getImage(**pieceCtr).c_str());
@@ -73,8 +76,20 @@ void ChessWindow::refreshWindow()
             else {
                 label->clear();
             }
+
+            auto it = std::find(possibleLocations.begin(), possibleLocations.end(), Location(col, row));
+            QPainter qpainter = QPainter();
+            if (it != possibleLocations.end()) {
+                qpainter.drawEllipse(20, 20, 20, 20);
+            }
+            
         }
     }
+
+    model::Game& game = model::Game::getInstance();
+    std::string teamName = (game.getTurn() == model::Team::WHITE ? "Blanc" : "Noir");
+    std::string textTotal = "Équipe: " + teamName;
+    text->setText(QString::fromStdString(textTotal));
 }
 
 std::string ChessWindow::getImage(model::Piece& piece)
@@ -115,59 +130,6 @@ void ChessWindow::onClickChess(model::Location loc)
     }
 
     refreshWindow();
-
-    //std::cout << loc << std::endl;
-
-    //model::Board& board = model::Board::getInstance();
-    //vue::Game& vueGame = vue::Game::getInstance();
-    //model::Game& modelGame = model::Game::getInstance();
-
-    //std::cout << (modelGame.getTurn() == Team::WHITE ? "White" : "Black") << std::endl;
-
-
-    //// S'il y a une pièce sélectionnée et qu'il appuie sur une position
-    //// possible de la pièce, déplacer.
-    //if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc)) {
-    //   // if(modelGame.getTurn() == )
-    //    board.movePiece(*vueGame.getSelected(), loc);
-    //    modelGame.nextTurn();
-    //    vueGame.setSelected({});
-    //    refreshWindow();
-
-    //    std::cout << "Hello 1" << std::endl;
-
-    //    return;
-    //}
-
-    //// Si le gars appuie dans le vide, reset.
-    //PieceContainer& pieceCtr = board.getPiece(loc);
-    //if (!pieceCtr.has_value()) {
-    //    vueGame.setSelected({});
-    //    refreshWindow();
-    //    std::cout << "Hello 2" << std::endl;
-    //    return;
-    //}
-
-    //Team& team = modelGame.getTurn();
-    //
-    //Piece& piece = **pieceCtr;
-
-    //// Si le gars appuie sur une de ses pièces : display ses positions possible.
-    //if (piece.getTeam() == team) {
-    //    vueGame.setSelected(loc);
-    //    refreshWindow();
-    //    std::cout << "Hello 3" << std::endl;
-    //    return;
-    //}
-
-
-    //// Si le gars clique sur une pièce qui n'est pas la sienne.
-    //if (piece.getTeam() != team) {
-    //    vueGame.setSelected({});
-    //    refreshWindow();
-    //    std::cout << "Hello 4" << std::endl;
-    //    return;
-    //}
 }
 
 void ChessWindow::selectPiece(model::Location loc)

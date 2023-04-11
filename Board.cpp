@@ -75,6 +75,7 @@ std::list<Location> Board::calculatePossiblePosition(Piece& piece, Location pos)
 
 	// Regarder si la pièce sélectionnée est de la même équipe
 	positions.remove_if([&team, this](Location& location) {
+		cout << location << endl;
 		return (this->getPiece(location)).has_value() && team == (**(this->getPiece(location))).getTeam();
 		});
 
@@ -192,7 +193,7 @@ list<Location> model::Board::relativeToRealPosition(list<Location>& relativePosi
 		Location realLocation = { loc.first + pos.first, loc.second + pos.second };
 
 		// Regarder si la pièce se situe à l'extérieur du tableau
-		if (realLocation.first < 0 || realLocation.first > BOARD_SIZE || realLocation.second < 0 || realLocation.second > BOARD_SIZE) continue;
+		if (realLocation.first < 0 || realLocation.first >= BOARD_SIZE || realLocation.second < 0 || realLocation.second >= BOARD_SIZE) continue;
 
 		// Normalement tout devrait avoir été calculé
 		positions.push_back(realLocation);
