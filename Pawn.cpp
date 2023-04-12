@@ -5,12 +5,18 @@ std::list<Location> Pawn::getPossiblePositions(Location& loc) const
 {
 	// TODO : En passant : si le dernier pion a bougé de 2, il peut le manger (regarder l'historique).
 	// Retirer la location si y'a une pièce devant.
+
 	Board& board = Board::getInstance();
 	int position = this->team == Team::WHITE ? -1 : 1;
 	std::list<Location> locations = {};
 
+
+	/*
+	*	Pion qui mange
+	*/
 	std::list<Location> temp = { {1, position}, {-1, position} };
 	for (Location& pos : temp) {
+
 		Location boardLocation = { loc.first + pos.first, loc.second + pos.second };
 
 		if (boardLocation.first < 0 || boardLocation.first >= BOARD_SIZE || boardLocation.second < 0 || boardLocation.second >= BOARD_SIZE) {
@@ -24,8 +30,27 @@ std::list<Location> Pawn::getPossiblePositions(Location& loc) const
 		}
 	}
 
-	locations.push_back(Location(0, 1 * position));
-	if(!this->getMoves()) locations.push_back(Location(0, 2 * position));
+
+
+	/*
+	*	Avancement du pion
+	*/
+	std::list<Location> secondList = { Location(0, 1 * position), Location(0, 2 * position) };
+	for (Location& pos : secondList) {
+		Location boardLocation = { loc.first + pos.first, loc.second + pos.second };
+		if (boardLocation.first < 0 || boardLocation.first >= BOARD_SIZE || boardLocation.second < 0 || boardLocation.second >= BOARD_SIZE) {
+			continue;
+		}
+		else if (board.getPiece({ boardLocation.first, boardLocation.second }).has_value()) {
+			continue;
+		}
+
+		if (pos == Location(0, 2 * position) && this->getMoves()) {
+			continue;
+		}
+		locations.push_back(pos);
+	}
+
 	return locations;
 }
 void Pawn::display(std::ostream& out) const {
