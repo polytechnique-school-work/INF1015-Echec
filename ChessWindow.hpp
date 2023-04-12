@@ -20,6 +20,7 @@ private:
 	void selectPiece(model::Location loc);
 	void movePiece(model::Location src, model::Location dst);
 	void resetSelect();
+	void setLabelSelected(QLabel* label);
 
 };
 

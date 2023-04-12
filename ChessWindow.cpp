@@ -59,10 +59,16 @@ void ChessWindow::generateWindow()
 
 void ChessWindow::refreshWindow()
 {
+  
+
     vue::Game& vueGame = vue::Game::getInstance();
     Board& board = Board::getInstance();
-    model::Piece& piece = **board.getPiece(*vueGame.getSelected());
-    std::list<model::Location> possibleLocations = board.calculateKingSafePosition(piece, *vueGame.getSelected());
+    std::list<model::Location> possibleLocations = {};
+    if (vueGame.getSelected().has_value()) {
+        model::PieceContainer& pieceCtr = board.getPiece(*vueGame.getSelected());
+        model::Piece& piece = **board.getPiece(*vueGame.getSelected());
+        possibleLocations = board.calculateKingSafePosition(piece, *vueGame.getSelected());
+    }
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
 
@@ -80,16 +86,36 @@ void ChessWindow::refreshWindow()
             auto it = std::find(possibleLocations.begin(), possibleLocations.end(), Location(col, row));
             QPainter qpainter = QPainter();
             if (it != possibleLocations.end()) {
-                qpainter.drawEllipse(20, 20, 20, 20);
+                setLabelSelected(label);
             }
             
         }
     }
 
-    model::Game& game = model::Game::getInstance();
+  /*  model::Game& game = model::Game::getInstance();
     std::string teamName = (game.getTurn() == model::Team::WHITE ? "Blanc" : "Noir");
     std::string textTotal = "Équipe: " + teamName;
-    text->setText(QString::fromStdString(textTotal));
+    text->setText(QString::fromStdString(textTotal));*/
+}
+
+void ChessWindow::setLabelSelected(QLabel* label)
+{
+    int width = label->width();
+    int height = label->height();
+    QPixmap pixmap(width, height);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    QColor color;
+    color.setRgb(120, 120, 120);
+    color.setAlpha(100);
+
+    painter.setBrush(color);
+    painter.setPen(QPen(Qt::black, 0));
+    int x = width / 2;
+    int y = height / 2;
+    int radius = qMin(x, y) - 30;
+    painter.drawEllipse(QPoint(x, y), radius, radius);
+    label->setPixmap(pixmap);
 }
 
 std::string ChessWindow::getImage(model::Piece& piece)
