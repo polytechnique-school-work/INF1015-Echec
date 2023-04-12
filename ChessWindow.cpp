@@ -100,22 +100,34 @@ void ChessWindow::refreshWindow()
 
 void ChessWindow::setLabelSelected(QLabel* label)
 {
+    
     int width = label->width();
     int height = label->height();
     QPixmap pixmap(width, height);
+    QImage image = label->pixmap().toImage();
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
+    // Perte de qualité sur l'image, à cause du resize, je sais pas comment le fix.
+    if(!image.isNull()) {
+        image = image.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QRect rect(image.rect());
+        QRect devRect(0,0, painter.device()->width(), painter.device()->height());
+        rect.moveCenter(devRect.center());
+        painter.drawImage(rect.topLeft(), image);
+    }
+
+
+    int x = width / 2;
+    int y = height / 2;
     QColor color;
     color.setRgb(120, 120, 120);
     color.setAlpha(100);
-
     painter.setBrush(color);
     painter.setPen(QPen(Qt::black, 0));
-    int x = width / 2;
-    int y = height / 2;
     int radius = qMin(x, y) - 30;
     painter.drawEllipse(QPoint(x, y), radius, radius);
     label->setPixmap(pixmap);
+    label->setScaledContents(true);
 }
 
 std::string ChessWindow::getImage(model::Piece& piece)

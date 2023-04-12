@@ -75,7 +75,6 @@ std::list<Location> Board::calculatePossiblePosition(Piece& piece, Location pos)
 
 	// Regarder si la pièce sélectionnée est de la même équipe
 	positions.remove_if([&team, this](Location& location) {
-		cout << location << endl;
 		return (this->getPiece(location)).has_value() && team == (**(this->getPiece(location))).getTeam();
 		});
 
