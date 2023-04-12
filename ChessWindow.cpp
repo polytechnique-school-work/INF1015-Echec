@@ -26,11 +26,16 @@ ChessWindow::ChessWindow(QWidget* parent): QMainWindow(parent)
 
 void ChessWindow::generateWindow()
 {
+
+    // QVBoxLayout* qvBoxLayout = new QVBoxLayout(this);
+
     auto widgetPrincipal = new QWidget(this);
+    // qvBoxLayout->addWidget(widgetPrincipal);
 
 	setWindowTitle("Échecs");
 
 	grid = new QGridLayout(widgetPrincipal);
+
 
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
@@ -50,10 +55,6 @@ void ChessWindow::generateWindow()
         }
     }
 
-    text = new QLabel();
-    text->setText("Équipe: ");
-    grid->addWidget(text);
-    
     setCentralWidget(widgetPrincipal);
 }
 
@@ -92,15 +93,14 @@ void ChessWindow::refreshWindow()
         }
     }
 
-  /*  model::Game& game = model::Game::getInstance();
+    model::Game& game = model::Game::getInstance();
     std::string teamName = (game.getTurn() == model::Team::WHITE ? "Blanc" : "Noir");
-    std::string textTotal = "Équipe: " + teamName;
-    text->setText(QString::fromStdString(textTotal));*/
+    std::string textTotal = "Échecs | Équipe: " + teamName;
+    setWindowTitle(QString::fromStdString(textTotal));
 }
 
 void ChessWindow::setLabelSelected(QLabel* label)
 {
-    
     int width = label->width();
     int height = label->height();
     QPixmap pixmap(width, height);
