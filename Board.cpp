@@ -56,7 +56,7 @@ void model::Board::removeErronedLocations(LocationContainer& locations)
 
 void model::Board::setPieceAt(PieceContainer& piece, Location loc)
 {
-	cout << "Changement de position de la pièce" << endl;
+	// cout << "Changement de position de la pièce" << endl;
 	board[loc.first][loc.second] = piece;
 }
 

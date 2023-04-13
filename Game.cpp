@@ -4,7 +4,7 @@ using namespace model;
 
 void Game::nextTurn()
 {
-	std::cout << "Changement d'equipe" << std::endl;
+	// std::cout << "Changement d'equipe" << std::endl;
 	this->turn = (this->turn == Team::WHITE ? Team::BLACK : Team::WHITE);
 }
 

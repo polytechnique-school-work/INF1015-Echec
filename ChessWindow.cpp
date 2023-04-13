@@ -45,9 +45,14 @@ void ChessWindow::generateWindow()
 
     QPushButton* button = new QPushButton("Rollback", widgetPrincipal);
     connect(button, &QPushButton::clicked, this, [this]() {rollback(); });
+    text = new QLabel();
+    text->setText("Équipe: ");
+
+
 
 
     qvboxLayout->addWidget(chessWidget);
+    qvboxLayout->addWidget(text);
     qvboxLayout->addWidget(button);
     
 
@@ -79,6 +84,14 @@ void ChessWindow::rollback() {
     Board& board = Board::getInstance();
     board.rollback();
     refreshWindow();
+}
+
+void ChessWindow::refreshTeam()
+{
+    model::Team team = model::Game::getInstance().getTurn();
+    std::string tour = "C'est au tour de: ";
+    tour += team == model::Team::WHITE ? "blanc" : "noir";
+    text->setText(tour.c_str());
 }
 
 
@@ -115,10 +128,7 @@ void ChessWindow::refreshWindow()
         }
     }
 
-    model::Game& game = model::Game::getInstance();
-    std::string teamName = (game.getTurn() == model::Team::WHITE ? "Blanc" : "Noir");
-    std::string textTotal = "Échecs | Équipe: " + teamName;
-    setWindowTitle(QString::fromStdString(textTotal));
+    refreshTeam();
 }
 
 void ChessWindow::setLabelSelected(QLabel* label)
@@ -163,7 +173,6 @@ std::string ChessWindow::getImage(model::Piece& piece)
 
 void ChessWindow::onClickChess(model::Location loc)
 {
-    std::cout << loc << std::endl;
     model::Board& board = model::Board::getInstance();
     vue::Game& vueGame = vue::Game::getInstance();
     model::Game& modelGame = model::Game::getInstance();
@@ -194,14 +203,14 @@ void ChessWindow::onClickChess(model::Location loc)
 
 void ChessWindow::selectPiece(model::Location loc)
 {
-    std::cout << "Select: " << loc << std::endl;
+    //std::cout << "Select: " << loc << std::endl;
     vue::Game& vueGame = vue::Game::getInstance();
     vueGame.setSelected(loc);
 }
 
 void ChessWindow::movePiece(model::Location src, model::Location dst)
 {
-    std::cout << "MovePiece: \n" << "\tSrc: " << src << "\n" << "\tDst: " << dst <<std::endl;
+    //std::cout << "MovePiece: \n" << "\tSrc: " << src << "\n" << "\tDst: " << dst <<std::endl;
     model::Board& board = model::Board::getInstance();
     model::Game& modelGame = model::Game::getInstance();
 
@@ -212,7 +221,7 @@ void ChessWindow::movePiece(model::Location src, model::Location dst)
 
 void ChessWindow::resetSelect()
 {
-    std::cout << "Reset selection" << std::endl;
+    //std::cout << "Reset selection" << std::endl;
     vue::Game& vueGame = vue::Game::getInstance();
     vueGame.setSelected({});
 

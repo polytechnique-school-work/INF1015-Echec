@@ -22,7 +22,7 @@ private:
 	void resetSelect();
 	void setLabelSelected(QLabel* label);
 	void rollback();
-
+	void refreshTeam();
 };
 
 
