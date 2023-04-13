@@ -33,7 +33,7 @@ LocationContainer Board::possibleMoves(Location src)
 	PieceContainer& piece = this->getPiece(src);
 	if (piece.has_value()) {
 		Board& board = Board::getInstance();
-		locations.append_range(board.calculateKingSafePosition(**piece, src));
+		locations = board.calculateKingSafePosition(**piece, src);
 	}
 	return locations;
 }
