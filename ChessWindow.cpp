@@ -64,11 +64,9 @@ void ChessWindow::refreshWindow()
 
     vue::Game& vueGame = vue::Game::getInstance();
     Board& board = Board::getInstance();
-    std::list<model::Location> possibleLocations = {};
+    model::LocationContainer possibleLocations = {};
     if (vueGame.getSelected().has_value()) {
-        model::PieceContainer& pieceCtr = board.getPiece(*vueGame.getSelected());
-        model::Piece& piece = **board.getPiece(*vueGame.getSelected());
-        possibleLocations = board.calculateKingSafePosition(piece, *vueGame.getSelected());
+        possibleLocations = board.possibleMoves(*vueGame.getSelected());
     }
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {

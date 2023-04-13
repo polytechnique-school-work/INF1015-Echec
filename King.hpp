@@ -8,7 +8,7 @@ namespace model {
 		King(Team team);
 		King(Team team, bool bypass); // Aiguillage pour permettre un bypass du compteur.
 		~King();
-		std::list<Location> getPossiblePositions(Location& loc) const;
+		LocationContainer getPossiblePositions(Location& loc) const;
 		void display(std::ostream& out) const;
 		std::string getName();
 	private:

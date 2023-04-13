@@ -13,16 +13,12 @@ namespace model {
 	class Board {
 	public:
 		void movePiece(Location src, Location dst);
-		std::list<Location> possibleMoves(Location src);
+		LocationContainer possibleMoves(Location src);
 
 		PieceContainer& getPiece(Location src) const;
 		Board();
 
 		friend std::ostream& operator<<(std::ostream& out, const Board& board);
-
-		std::list<Location> calculatePossiblePosition(Piece& piece, Location pos);
-
-		std::list<Location> calculateKingSafePosition(Piece& piece, Location pos);
 
 		void rollback();
 
@@ -41,20 +37,24 @@ namespace model {
 
 		BoardContainer& getBoardContainer();
 
-		std::list<Location> relativeToRealPosition(std::list<Location>& locations, Location pos);
+		LocationContainer relativeToRealPosition(LocationContainer& locations, Location pos);
 
 		// Comment déterminer si le déplacement est safe : 
 		// *	Aucun pion ne peut le manger après le déplacement aux coordonnées choisies.
-		bool isSafeMove(Location& loc, Team& team);
-		void removeUnsafeMove(std::list<Location>& possibleMoves, Team team);
-		void removeSameTeamMove(std::list<Location>& possibleMoves, Team team);
+		bool isSafeMove(const Location& loc, Team& team);
+		void removeUnsafeMove(LocationContainer& possibleMoves, Team team);
+		void removeSameTeamMove(LocationContainer& possibleMoves, Team team);
 
-		void printPiecePosition();
-		void displaySelected(Location pos);
-		void displayWithList(std::list<Location> positions);
 		bool isMovePossible(Location src, Location dst);
 
+
+		void removeErronedLocations(LocationContainer& locations);
+
 	private:
+		LocationContainer calculatePossiblePosition(Piece& piece, Location pos);
+
+		LocationContainer calculateKingSafePosition(Piece& piece, Location pos);
+
 		static std::unique_ptr<Board> $instance;
 		BoardContainer board;
 		Pieces pieces;

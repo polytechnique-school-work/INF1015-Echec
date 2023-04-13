@@ -1,10 +1,10 @@
 #include "Queen.hpp"
 
 using namespace model;
-std::list<Location> Queen::getPossiblePositions(Location& loc) const
+LocationContainer Queen::getPossiblePositions(Location& loc) const
 {
-	std::list<Location> bishopPositions = Bishop(this->team).getPossiblePositions(loc);
-	std::list<Location> rockPositions = Rock(this->team).getPossiblePositions(loc);
+	LocationContainer bishopPositions = Bishop(this->team).getPossiblePositions(loc);
+	LocationContainer rockPositions = Rock(this->team).getPossiblePositions(loc);
 
 	bishopPositions.sort();
 	rockPositions.sort();

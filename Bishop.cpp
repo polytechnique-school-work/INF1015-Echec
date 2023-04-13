@@ -3,9 +3,9 @@
 
 using namespace model;
 
-std::list<Location> Bishop::getPossiblePositions(Location& loc) const
+LocationContainer Bishop::getPossiblePositions(Location& loc) const
 {
-	std::list<Location> locations = {};
+	LocationContainer locations = {};
 	for (int i = -1; i <= 1; i += 2) {
 		for (int j = -1; j <= 1; j += 2) { 
 			for (int val = 1; val <= BOARD_SIZE; val++) {

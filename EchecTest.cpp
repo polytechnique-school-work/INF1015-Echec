@@ -14,10 +14,9 @@ TEST(Positions, calculate_king_safe) {
 	Board& boardInstance = Board::getInstance();
 
 	boardInstance.generateBoard(board);
-	Piece& king = **boardInstance.getPiece({ 3,3 });
 
-	std::list<Location> supposedPositions = { {4, 2}, {3, 4} };
-	std::list<Location> calculatedPositions = boardInstance.calculateKingSafePosition(king, { 3,3 });
+	LocationContainer supposedPositions = { {4, 2}, {3, 4} };
+	LocationContainer calculatedPositions = boardInstance.possibleMoves({ 3,3 });
 
 	EXPECT_EQ(supposedPositions, calculatedPositions);
 }
@@ -29,10 +28,8 @@ TEST(Positions, calculate_bishop) {
 	Board& boardInstance = Board::getInstance();
 
 	boardInstance.generateBoard(board);
-	Piece& bishop = **boardInstance.getPiece({ 5, 2 });
-
-	std::list<Location> supposedPositions = { {6, 1}, {7, 0}, {4, 3}, {3, 4}, {2, 5}, {1, 6}, {0, 7}, {6, 3}, {7, 4} };
-	std::list<Location> calculatedPositions = boardInstance.calculatePossiblePosition(bishop, {5, 2});
+	LocationContainer supposedPositions = { {6, 1}, {7, 0}, {4, 3}, {3, 4}, {2, 5}, {1, 6}, {0, 7}, {6, 3}, {7, 4} };
+	LocationContainer calculatedPositions = boardInstance.possibleMoves({5, 2});
 
 	EXPECT_EQ(supposedPositions, calculatedPositions);
 }

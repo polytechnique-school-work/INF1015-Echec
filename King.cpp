@@ -17,7 +17,7 @@ model::King::~King()
 {
 	if (!this->bypass) instanceCount--;
 }
-std::list<Location> King::getPossiblePositions(Location& loc) const
+LocationContainer King::getPossiblePositions(Location& loc) const
 {
 	return { {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1} };
 }

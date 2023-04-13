@@ -73,7 +73,7 @@ namespace model {
 		return out;
 	}
 
-	std::ostream& operator<<(std::ostream& out, const list<Location>& locations) {
+	std::ostream& operator<<(std::ostream& out, const LocationContainer& locations) {
 		out << "Locations: " << endl;
 		for (auto&& loc : locations)
 		{
@@ -90,13 +90,13 @@ namespace model {
 }
 
 void executer() {
-
 	Board& board = Board::getInstance();
-	//board.printPiecePosition();
 	const std::string defaultBoard = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
-
 	board.generateBoard(defaultBoard);
 }
+
+
+
 
 
 int main(int argc, char *argv[])
@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
 
 	executer();
 	ChessWindow chessWindow = ChessWindow();
-	chessWindow.show(); 
+	chessWindow.show();
+	chessWindow.setFixedSize(chessWindow.size());
 	return app.exec();
 }

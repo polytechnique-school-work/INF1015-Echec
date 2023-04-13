@@ -1,20 +1,20 @@
 ﻿#include "Pawn.hpp"
 #include "Board.hpp"
 using namespace model;
-std::list<Location> Pawn::getPossiblePositions(Location& loc) const
+LocationContainer Pawn::getPossiblePositions(Location& loc) const
 {
 	// TODO : En passant : si le dernier pion a bougé de 2, il peut le manger (regarder l'historique).
 	// Retirer la location si y'a une pièce devant.
 
 	Board& board = Board::getInstance();
 	int position = this->team == Team::WHITE ? -1 : 1;
-	std::list<Location> locations = {};
+	LocationContainer locations = {};
 
 
 	/*
 	*	Pion qui mange
 	*/
-	std::list<Location> temp = { {1, position}, {-1, position} };
+	LocationContainer temp = { {1, position}, {-1, position} };
 	for (Location& pos : temp) {
 
 		Location boardLocation = { loc.first + pos.first, loc.second + pos.second };
@@ -35,7 +35,7 @@ std::list<Location> Pawn::getPossiblePositions(Location& loc) const
 	/*
 	*	Avancement du pion
 	*/
-	std::list<Location> secondList = { Location(0, 1 * position), Location(0, 2 * position) };
+	LocationContainer secondList = { Location(0, 1 * position), Location(0, 2 * position) };
 	for (Location& pos : secondList) {
 		Location boardLocation = { loc.first + pos.first, loc.second + pos.second };
 		if (boardLocation.first < 0 || boardLocation.first >= BOARD_SIZE || boardLocation.second < 0 || boardLocation.second >= BOARD_SIZE) {

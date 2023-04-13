@@ -4,11 +4,11 @@
 using namespace model;
 using namespace std;
 
-list<Location> Rock::getPossiblePositions(Location& loc) const
+LocationContainer Rock::getPossiblePositions(Location& loc) const
 {
-	std::list<Location> locations = {};
+	LocationContainer locations = {};
 
-	list<Location> possiblesMoves = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
+	LocationContainer possiblesMoves = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
 
 	for (Location& location : possiblesMoves) {
 		for (int i = 1; i < BOARD_SIZE; i++) {

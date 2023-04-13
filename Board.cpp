@@ -12,78 +12,66 @@
 using namespace std;
 using namespace model;
 
+// Obtenir une pièce grâce à une position src
 PieceContainer& Board::getPiece(Location src) const {
 	return this->board[src.first][src.second];
 }
 
-
-
+// Déplacer une pièce d'une position src à dst
 void Board::movePiece(Location src, Location dst)
 {
-	// Ne devrait jamais être run, enlever si non nécessaire.
-	//if (!isMovePossible(src, dst)) {
-	//	cout << "> Mouvement impossible" << endl;
-	//	return;
-	//}
-
 	this->board[dst.first][dst.second] = move(this->board[src.first][src.second]);
 	this->board[src.first][src.second] = {};
 	(**this->getPiece(dst)).incrementMoves();
-
-	unique_ptr<History> ptrHistory(new History(src, dst));
-	this->history.push(move(ptrHistory));
-
-	// TODO Compter les pièces et la retirer des pièces actives.
+	this->history.push(unique_ptr<History>(new History(src, dst)));
 }
 
-std::list<Location> Board::possibleMoves(Location src)
+// Obtenir les déplacements possibles pour une pièce à la position src
+LocationContainer Board::possibleMoves(Location src)
 {
-	// TODO :	Faire un nettoyage des positions renvoyées par les pièces
-	//			pour éliminer les coordonnées qui sont en dehors du jeu
-	//			et celles qui sont pas possibles.
- 
+	LocationContainer locations = {};
 	PieceContainer& piece = this->getPiece(src);
-	Board& board = Board::getInstance();
-	return board.calculateKingSafePosition(**piece, src);
+	if (piece.has_value()) {
+		Board& board = Board::getInstance();
+		locations.append_range(board.calculateKingSafePosition(**piece, src));
+	}
+	return locations;
 }
 
+Board::Board() {}
 
-
-
-Board::Board()
-{
-	// Bon c'est la méthode la moins dégueulasse que j'ai trouvé pour placer les pions.
-	// const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
-	// const std::string defaultBoard = "XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXWPXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX";
-	// generateBoard(defaultBoard);
-}
-
+// Vérifier si un déplacement est possible => Non utilisé pour le moment
 bool Board::isMovePossible(Location src, Location dst)
 {
-	std::list<Location> possibleMoves = this->possibleMoves(src);
+	LocationContainer possibleMoves = this->possibleMoves(src);
 	auto it = find(possibleMoves.begin(), possibleMoves.end(), dst);
 	return it != possibleMoves.end();
 }
 
-
-std::list<Location> Board::calculatePossiblePosition(Piece& piece, Location pos)
+// Retirer les positions éronnées (qui sont en dehors du tableau de jeu)
+void model::Board::removeErronedLocations(LocationContainer& locations)
 {
-	list<Location> relativePosition = piece.getPossiblePositions(pos);
+	std::remove_if(locations.begin(), locations.end(), [&](const Location& location) { return location.first < 0 || location.first >= BOARD_SIZE || location.second < 0 || location.second >= BOARD_SIZE; });
+}
 
-	list<Location> positions = relativeToRealPosition(relativePosition, pos);
+// Calculer les déplacements possibles
+LocationContainer Board::calculatePossiblePosition(Piece& piece, Location pos)
+{
+	LocationContainer relativePosition = piece.getPossiblePositions(pos);
+	LocationContainer positions = relativeToRealPosition(relativePosition, pos);
+
 	Team team = piece.getTeam();
 
-	// Regarder si la pièce sélectionnée est de la même équipe
-	positions.remove_if([&team, this](Location& location) {
-		return (this->getPiece(location)).has_value() && team == (**(this->getPiece(location))).getTeam();
-		});
+	// Retirer si la pièce sélectionnée est de la même équipe
+	positions.remove_if([&team, this](const Location& location) {return (this->getPiece(location)).has_value() && team == (**(this->getPiece(location))).getTeam(); });
 
 	return positions;
 }
 
-std::list<Location> model::Board::calculateKingSafePosition(Piece& piece, Location pos)
+// Calculer les déplacements possibles en sécurisant le roi
+LocationContainer model::Board::calculateKingSafePosition(Piece& piece, Location pos)
 {
-	list<Location> locations =  calculatePossiblePosition(piece, pos);
+	LocationContainer locations =  calculatePossiblePosition(piece, pos);
 
 	if (King* king = dynamic_cast<King*>(&piece)) {
 		Board::getInstance().removeUnsafeMove(locations, king->getTeam());
@@ -91,11 +79,13 @@ std::list<Location> model::Board::calculateKingSafePosition(Piece& piece, Locati
 	return locations;
 }
 
+// Permettre un retour en arrière du jeu (c'est le RAII)
 void model::Board::rollback()
 {
 	this->history.pop();
 }
 
+// Permet de générer un board
 void model::Board::generateBoard(const std::string& defaultBoard)
 {
 	if (defaultBoard.size() != static_cast<unsigned long long>(BOARD_SIZE) * BOARD_SIZE * 2) throw logic_error("Le defaultBoard doit être de BOARD_SIZE * BOARD_SIZE cases.");
@@ -121,16 +111,19 @@ void model::Board::generateBoard(const std::string& defaultBoard)
 	}
 }
 
+// Vérifier si le roi est en échec
 bool model::Board::isEchec(Location& loc, Team& team)
 {
 	return false;
 }
 
+// Vérifier si le roi est en échec et mat
 bool model::Board::isMat(Location& loc, Team& team)
 {
 	return false;
 }
 
+// Permet de convertir les pièces du board en objet
 PieceContainer Board::pieceConverter(char color, char piece) {
 	/*
 	Bishop = F
@@ -170,7 +163,6 @@ unique_ptr<Board> Board::$instance = nullptr;
 
 Board& Board::getInstance()
 {
-
 	if ($instance == nullptr) {
 		$instance = make_unique<Board>(Board());
 	}
@@ -182,9 +174,9 @@ BoardContainer& const Board::getBoardContainer()
 	return this->board;
 }
 
-list<Location> model::Board::relativeToRealPosition(list<Location>& relativePositions, Location pos)
+LocationContainer model::Board::relativeToRealPosition(LocationContainer& relativePositions, Location pos)
 {
-	list<Location> positions = {};
+	LocationContainer positions = {};
 
 	for (Location& loc : relativePositions) {
 
@@ -201,7 +193,7 @@ list<Location> model::Board::relativeToRealPosition(list<Location>& relativePosi
 	return positions;
 }
 
-bool Board::isSafeMove(Location& loc, Team& team)
+bool Board::isSafeMove(const Location& loc, Team& team)
 {
 	// Team opponent = team == Team::WHITE ? Team::BLACK : Team::WHITE;
 
@@ -219,7 +211,7 @@ bool Board::isSafeMove(Location& loc, Team& team)
 	Board& board = Board::getInstance();
 	for (shared_ptr<Piece>& piece : pieces) {
 
-		list<Location> realPositions = board.calculatePossiblePosition(*piece, loc);// piece->getPossiblePositions(loc);
+		LocationContainer realPositions = board.calculatePossiblePosition(*piece, loc);// piece->getPossiblePositions(loc);
 
 		// Pour chacune de ces possibles positions, on regarde s'il y a une pièce à l'extrémité.
 		for (Location& pos : realPositions) {
@@ -244,100 +236,19 @@ bool Board::isSafeMove(Location& loc, Team& team)
 	return true;
 }
 
-void Board::removeUnsafeMove(list<Location>& possibleMoves, Team team)
+void Board::removeUnsafeMove(LocationContainer& possibleMoves, Team team)
 {
-	possibleMoves.remove_if([this, &team](Location& move) { return !isSafeMove(move, team); });
+	possibleMoves.remove_if([&](const Location& location) {return !isSafeMove(location, team); });
 }
 
-void model::Board::removeSameTeamMove(std::list<Location>& possibleMoves, Team team)
+void model::Board::removeSameTeamMove(LocationContainer& possibleMoves, Team team)
 {
 	for (Location& location : possibleMoves) {
 		PieceContainer& pieceAtLocationContainer = this->getPiece(location);
 		if (pieceAtLocationContainer.has_value()) {
 			Piece& pieceAtLocation = (**pieceAtLocationContainer);
-			if (pieceAtLocation.getTeam() == team) possibleMoves.remove(location);
+			if (pieceAtLocation.getTeam() == team)
+				possibleMoves.remove(location);
 		}
 	}
-}
-
-
-
-/*
-
-	PRINTER : Surtout pour du débug
-
-*/
-
-void model::Board::printPiecePosition()
-{
-	for (int i = 0; i < BOARD_SIZE; i++) {
-		for (int j = 0; j < BOARD_SIZE; j++) {
-			if (board[j][i].has_value()) {
-				cout << typeid((**board[j][i])).name() << "\t" << Location(j, i) << endl;
-			}
-		}
-	}
-}
-
-void model::Board::displaySelected(Location pos)
-{
-	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
-
-	Piece& piece = **this->getPiece(pos);
-	list<Location> selectedPiece = this->calculateKingSafePosition(piece, pos);
-
-	cout << ligneDeSeparation << endl;
-	for (int y = 0; y < BOARD_SIZE; y++)
-	{
-		for (int x = 0; x < BOARD_SIZE; x++) {
-			auto&& piece = this->getPiece(Location(x, y));
-
-			auto it = find(selectedPiece.begin(), selectedPiece.end(), Location(x, y));
-
-			if (it != selectedPiece.end()) {
-				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
-			}
-			else {
-				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
-			}
-
-
-			cout << "\t";
-		}
-
-		cout << endl;
-	}
-
-	cout << ligneDeSeparation << endl;
-
-}
-
-void model::Board::displayWithList(list<Location> positions)
-{
-	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
-
-
-	cout << ligneDeSeparation << endl;
-	for (int y = 0; y < BOARD_SIZE; y++)
-	{
-		for (int x = 0; x < BOARD_SIZE; x++) {
-			auto&& piece = this->getPiece(Location(x, y));
-
-			auto it = find(positions.begin(), positions.end(), Location(x, y));
-
-			if (it != positions.end()) {
-				cout << "\033[1;31m[\033[0m" << piece << "\033[1;31m]\033[0m";
-			}
-			else {
-				cout << "\033[1;90m[\033[0m" << piece << "\033[1;90m]\033[0m";
-			}
-
-
-			cout << "\t";
-		}
-
-		cout << endl;
-	}
-
-	cout << ligneDeSeparation << endl;
 }

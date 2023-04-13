@@ -8,7 +8,7 @@ namespace model {
 	{
 	public:
 		Queen(Team team) : Piece(team) {};
-		std::list<Location> getPossiblePositions(Location& loc) const;
+		LocationContainer getPossiblePositions(Location& loc) const;
 		void display(std::ostream& out) const;
 		std::string getName();
 	private:
