@@ -97,8 +97,6 @@ void executer() {
 
 
 
-
-
 int main(int argc, char *argv[])
 {
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
@@ -110,6 +108,5 @@ int main(int argc, char *argv[])
 	executer();
 	ChessWindow chessWindow = ChessWindow();
 	chessWindow.show();
-	chessWindow.setFixedSize(chessWindow.size());
 	return app.exec();
 }

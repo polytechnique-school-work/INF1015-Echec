@@ -8,6 +8,7 @@
 #include <QtGui/QPixmap>
 #include <algorithm>
 #include "Game.hpp"
+#include <QPushButton>
 
 #include "VueGame.hpp"
 
@@ -34,7 +35,22 @@ void ChessWindow::generateWindow()
 
 	setWindowTitle("Échecs");
 
-	grid = new QGridLayout(widgetPrincipal);
+
+    // Mettre le QVBoxLayout parent de widgetPrincipal
+    QVBoxLayout* qvboxLayout = new QVBoxLayout(widgetPrincipal);
+
+    // Contient le plateau
+    auto chessWidget = new QWidget();
+	grid = new QGridLayout(chessWidget);
+
+    QPushButton* button = new QPushButton("Rollback", widgetPrincipal);
+    connect(button, &QPushButton::clicked, this, [this]() {rollback(); });
+
+
+    qvboxLayout->addWidget(chessWidget);
+    qvboxLayout->addWidget(button);
+    
+
 
 
     for (int row = 0; row < 8; ++row) {
@@ -55,8 +71,16 @@ void ChessWindow::generateWindow()
         }
     }
 
+
     setCentralWidget(widgetPrincipal);
 }
+
+void ChessWindow::rollback() {
+    Board& board = Board::getInstance();
+    board.rollback();
+    refreshWindow();
+}
+
 
 void ChessWindow::refreshWindow()
 {

@@ -50,6 +50,8 @@ namespace model {
 
 		void removeErronedLocations(LocationContainer& locations);
 
+		void setPieceAt(PieceContainer& piece, Location loc);
+
 	private:
 		LocationContainer calculatePossiblePosition(Piece& piece, Location pos);
 

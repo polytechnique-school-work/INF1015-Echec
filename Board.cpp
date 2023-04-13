@@ -20,10 +20,10 @@ PieceContainer& Board::getPiece(Location src) const {
 // Déplacer une pièce d'une position src à dst
 void Board::movePiece(Location src, Location dst)
 {
+	this->history.push(unique_ptr<History>(new History(src, dst)));
 	this->board[dst.first][dst.second] = move(this->board[src.first][src.second]);
 	this->board[src.first][src.second] = {};
 	(**this->getPiece(dst)).incrementMoves();
-	this->history.push(unique_ptr<History>(new History(src, dst)));
 }
 
 // Obtenir les déplacements possibles pour une pièce à la position src
@@ -54,6 +54,12 @@ void model::Board::removeErronedLocations(LocationContainer& locations)
 	std::remove_if(locations.begin(), locations.end(), [&](const Location& location) { return location.first < 0 || location.first >= BOARD_SIZE || location.second < 0 || location.second >= BOARD_SIZE; });
 }
 
+void model::Board::setPieceAt(PieceContainer& piece, Location loc)
+{
+	cout << "Changement de position de la pièce" << endl;
+	board[loc.first][loc.second] = piece;
+}
+
 // Calculer les déplacements possibles
 LocationContainer Board::calculatePossiblePosition(Piece& piece, Location pos)
 {
@@ -82,7 +88,8 @@ LocationContainer model::Board::calculateKingSafePosition(Piece& piece, Location
 // Permettre un retour en arrière du jeu (c'est le RAII)
 void model::Board::rollback()
 {
-	this->history.pop();
+	if(!this->history.empty())
+		this->history.pop();
 }
 
 // Permet de générer un board
@@ -169,7 +176,7 @@ Board& Board::getInstance()
 	return *$instance;
 }
 
-BoardContainer& const Board::getBoardContainer()
+BoardContainer& Board::getBoardContainer()
 {
 	return this->board;
 }
