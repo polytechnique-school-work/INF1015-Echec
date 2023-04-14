@@ -20,6 +20,7 @@ using namespace model;
 ChessWindow::ChessWindow(QWidget* parent): QMainWindow(parent)
 {
     Board& board = Board::getInstance();
+    // board.generateBoard("BRBCXXBQBKXXBCBRBPXXXXBPXXBPBPBPBFBPXXXXXXXXWPXXXXXXBPXXXXXXXXXXXXWPXXXXWPBPXXBFXXXXXXXXXXXXXXWPWPXXWPWPXXXXXXXXWRWCWFWQWKWFWCWR");
     generateWindow();
     // board.movePiece({0, 6}, {0, 5});
     refreshWindow();
@@ -45,15 +46,17 @@ void ChessWindow::generateWindow()
 
     QPushButton* button = new QPushButton("Rollback", widgetPrincipal);
     connect(button, &QPushButton::clicked, this, [this]() {rollback(); });
+
+    QPushButton* buttonSave = new QPushButton("Saveboard", widgetPrincipal);
+    connect(buttonSave, &QPushButton::clicked, this, [this]() {saveBoard(); });
+
     text = new QLabel();
     text->setText("Équipe: ");
-
-
-
 
     qvboxLayout->addWidget(chessWidget);
     qvboxLayout->addWidget(text);
     qvboxLayout->addWidget(button);
+    qvboxLayout->addWidget(buttonSave);
     
 
 
@@ -88,17 +91,26 @@ void ChessWindow::rollback() {
 
 void ChessWindow::refreshTeam()
 {
+    model::Board& board = model::Board::getInstance();
     model::Team team = model::Game::getInstance().getTurn();
     std::string tour = "C'est au tour de: ";
     tour += team == model::Team::WHITE ? "blanc" : "noir";
+    /*if (board.isEchec(team))
+        tour += "\nLe roi est en échec!!!";*/
     text->setText(tour.c_str());
+}
+
+void ChessWindow::saveBoard()
+{
+    Board& board = Board::getInstance();
+    board.saveBoard();
 }
 
 
 void ChessWindow::refreshWindow()
 {
   
-
+    // testDraw();
     vue::Game& vueGame = vue::Game::getInstance();
     Board& board = Board::getInstance();
     model::LocationContainer possibleLocations = {};

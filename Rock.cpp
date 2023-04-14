@@ -42,3 +42,8 @@ std::string model::Rock::getName()
 {
 	return "rock";
 }
+
+std::string model::Rock::getTag()
+{
+	return "R";
+}

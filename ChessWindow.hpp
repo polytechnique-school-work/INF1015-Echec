@@ -23,6 +23,7 @@ private:
 	void setLabelSelected(QLabel* label);
 	void rollback();
 	void refreshTeam();
+	void saveBoard();
 };
 
 

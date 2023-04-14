@@ -16,3 +16,8 @@ std::string model::Knight::getName()
 	return "knight";
 }
 
+std::string model::Knight::getTag()
+{
+	return "C";
+}
+

@@ -25,17 +25,21 @@ namespace model {
 		void generateBoard(const std::string& defaultBoard);
 
 		// Savoir si le roi à sa position actuel est en danger.
-		bool isEchec(Location& loc, Team& team);
+		bool isEchec(Team team);
 
 		// Si le roi n'a pas de possibleMoves (faire en sorte de retirer les moves dangereux) ET s'il
 		// n'est pas possible de manger une pièce qui permet un retour à la normal (et donc que le roi
 		// n'est pas possible d'être mangé au prochain tour) ET si le roi est en échec.
-		bool isMat(Location& loc, Team& team);
+		bool isMat(Team team, Location loc);
 
 		PieceContainer pieceConverter(char color, char piece);
 		static Board& getInstance();
 
 		BoardContainer& getBoardContainer();
+
+		Location getKingLocation(Team& team);
+
+		void removeTestedUnesafeLocation(Location& before, LocationContainer& possibleMovess);
 
 		LocationContainer relativeToRealPosition(LocationContainer& locations, Location pos);
 
@@ -47,6 +51,9 @@ namespace model {
 
 		bool isMovePossible(Location src, Location dst);
 
+		void saveBoard();
+
+		std::string convertPieceToBoard(PieceContainer& pieceContainer);
 
 		void removeErronedLocations(LocationContainer& locations);
 

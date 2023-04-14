@@ -61,3 +61,8 @@ std::string model::Pawn::getName()
 {
 	return "pawn";
 }
+
+std::string model::Pawn::getTag()
+{
+	return "P";
+}

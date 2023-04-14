@@ -31,4 +31,9 @@ std::string model::King::getName()
 	return "king";
 }
 
+std::string model::King::getTag()
+{
+	return "K";
+}
+
 int King::instanceCount = 0;

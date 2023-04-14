@@ -6,6 +6,7 @@
 #include "Rock.hpp"
 #include "Bishop.hpp"
 #include "Knight.hpp"
+#include "Game.hpp"
 #include <iostream>
 
 
@@ -29,12 +30,18 @@ void Board::movePiece(Location src, Location dst)
 // Obtenir les déplacements possibles pour une pièce à la position src
 LocationContainer Board::possibleMoves(Location src)
 {
+	Game& game = Game::getInstance();
+	Team team = game.getTurn();
 	LocationContainer locations = {};
 	PieceContainer& piece = this->getPiece(src);
 	if (piece.has_value()) {
 		Board& board = Board::getInstance();
 		locations = board.calculateKingSafePosition(**piece, src);
 	}
+
+	// Retrait des positions si y'a possibilité d'échec
+	removeTestedUnesafeLocation(src, locations);
+
 	return locations;
 }
 
@@ -48,10 +55,29 @@ bool Board::isMovePossible(Location src, Location dst)
 	return it != possibleMoves.end();
 }
 
+void model::Board::saveBoard()
+{
+	string value = "";
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			value += convertPieceToBoard(board[j][i]);
+		}
+	}
+	cout << value << endl;
+}
+
+string Board::convertPieceToBoard(PieceContainer& pieceContainer) {
+	if (!pieceContainer.has_value()) return "XX";
+	Piece& piece = **pieceContainer;
+	return (piece.getTeam() == Team::WHITE ? "W" : "B") + piece.getTag();
+}
+
 // Retirer les positions éronnées (qui sont en dehors du tableau de jeu)
 void model::Board::removeErronedLocations(LocationContainer& locations)
 {
-	std::remove_if(locations.begin(), locations.end(), [&](const Location& location) { return location.first < 0 || location.first >= BOARD_SIZE || location.second < 0 || location.second >= BOARD_SIZE; });
+	locations.remove_if([&](const Location& location) { return location.first < 0 || location.first >= BOARD_SIZE || location.second < 0 || location.second >= BOARD_SIZE; });
 }
 
 void model::Board::setPieceAt(PieceContainer& piece, Location loc)
@@ -74,6 +100,29 @@ LocationContainer Board::calculatePossiblePosition(Piece& piece, Location pos)
 	return positions;
 }
 
+Location Board::getKingLocation(Team& team) {
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			if (board[i][j].has_value() && typeid(**board[i][j]) == typeid(King) && (**board[i][j]).getTeam() == team) return { j, i };
+		}
+	}
+}
+
+void model::Board::removeTestedUnesafeLocation(Location& before, LocationContainer& possibleMoves)
+{
+	/*LocationContainer safeLocations = {};
+	Team& team = Game::getInstance().getTurn();
+	for (Location after : possibleMoves) {
+		movePiece(before, after);
+		if (!isEchec(team)) safeLocations.push_back(after);
+		rollback();
+	}
+	possibleMoves = safeLocations;*/
+}
+
+
 // Calculer les déplacements possibles en sécurisant le roi
 LocationContainer model::Board::calculateKingSafePosition(Piece& piece, Location pos)
 {
@@ -84,6 +133,8 @@ LocationContainer model::Board::calculateKingSafePosition(Piece& piece, Location
 	}
 	return locations;
 }
+
+
 
 // Permettre un retour en arrière du jeu (c'est le RAII)
 void model::Board::rollback()
@@ -119,13 +170,16 @@ void model::Board::generateBoard(const std::string& defaultBoard)
 }
 
 // Vérifier si le roi est en échec
-bool model::Board::isEchec(Location& loc, Team& team)
+bool model::Board::isEchec(Team team)
 {
-	return false;
+	Location loc = getKingLocation(team);
+
+	cout << "Check du save move pour la pièce " << loc << " de la team " << (team == Team::WHITE ? "white" : "black") << endl;
+	return !isSafeMove(loc, team);
 }
 
 // Vérifier si le roi est en échec et mat
-bool model::Board::isMat(Location& loc, Team& team)
+bool model::Board::isMat(Team team, Location loc)
 {
 	return false;
 }
@@ -204,8 +258,6 @@ bool Board::isSafeMove(const Location& loc, Team& team)
 {
 	// Team opponent = team == Team::WHITE ? Team::BLACK : Team::WHITE;
 
-	// TODO : Faire des tests de rapidité, si ce serait pas plus rapide de faire 2 listes de vecteurs selon la team
-	// et de les garder en variable static déjà déclaré et choisir en fonction de ce qu'on a besoin.
 	vector<shared_ptr<Piece>> pieces = {
 		make_shared<Queen>(Queen(team)),
 		make_shared<Bishop>(Bishop(team)),
@@ -234,6 +286,7 @@ bool Board::isSafeMove(const Location& loc, Team& team)
 				if (selectedPiece.getTeam() != piece->getTeam()) {
 					// Si les types des pièces sont les mêmes, y'a présence de danger.
 					if (typeid(selectedPiece) == typeid(*piece)) {
+						// cout << "Danger pour la location: " << loc << " avec les coordonnées: " << pos << endl;
 						return false;
 					}
 				}

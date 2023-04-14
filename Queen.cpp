@@ -22,3 +22,8 @@ std::string model::Queen::getName()
 	return "queen";
 }
 
+std::string model::Queen::getTag()
+{
+	return "Q";
+}
+

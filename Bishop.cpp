@@ -44,3 +44,8 @@ std::string model::Bishop::getName()
 	return "bishop";
 }
 
+std::string model::Bishop::getTag()
+{
+	return "F";
+}
+
