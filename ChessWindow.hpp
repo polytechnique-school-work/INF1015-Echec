@@ -24,6 +24,7 @@ private:
 	void rollback();
 	void refreshTeam();
 	void saveBoard();
+	void setLabelUnsafe(QLabel* label);
 };
 
 

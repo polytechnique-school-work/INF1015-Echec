@@ -10,6 +10,8 @@ namespace model {
 		void display(std::ostream& out) const;
 		std::string getName();
 		std::string getTag();
+		void removeEatPosition(Location& loc, LocationContainer& locations) const;
+		void removeForwardDirection(Location& loc, LocationContainer& locations) const;
 	private:
 	};
 

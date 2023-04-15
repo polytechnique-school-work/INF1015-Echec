@@ -87,9 +87,21 @@ void model::Board::setPieceAt(PieceContainer& piece, Location loc)
 }
 
 // Calculer les déplacements possibles
-LocationContainer Board::calculatePossiblePosition(Piece& piece, Location pos)
+LocationContainer Board::calculatePossiblePosition(Piece& piece, Location pos, bool remove = false)
 {
 	LocationContainer relativePosition = piece.getPossiblePositions(pos);
+
+	if (Pawn* pawn = dynamic_cast<Pawn*>(&piece)) {
+		if (remove) {
+			pawn->removeForwardDirection(pos, relativePosition);
+		}
+		else {
+			pawn->removeEatPosition(pos, relativePosition);
+		}
+		
+	}
+	
+
 	LocationContainer positions = relativeToRealPosition(relativePosition, pos);
 
 	Team team = piece.getTeam();
@@ -174,7 +186,9 @@ bool model::Board::isEchec(Team team)
 {
 	Location loc = getKingLocation(team);
 
-	cout << "Check du save move pour la pièce " << loc << " de la team " << (team == Team::WHITE ? "white" : "black") << endl;
+	cout << "Position du roi: " << loc << endl;
+
+	// cout << "Check du save move pour la pièce " << loc << " de la team " << (team == Team::WHITE ? "white" : "black") << endl;
 	return !isSafeMove(loc, team);
 }
 
@@ -254,43 +268,50 @@ LocationContainer model::Board::relativeToRealPosition(LocationContainer& relati
 	return positions;
 }
 
+LocationContainer Board::getEveryDangerousPlaces(Team& team) {
+	LocationContainer locations = {};
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++)
+		{
+			if (!isSafeMove({ x, y }, team)) {
+				locations.push_back({ x, y });
+			}
+		}
+	}
+
+	return locations;
+}
+
+/*
+* Prend en paramètre une team et une location.
+* Vérifie si la position loc est safe pour l'équipe team.
+**/
 bool Board::isSafeMove(const Location& loc, Team& team)
 {
-	// Team opponent = team == Team::WHITE ? Team::BLACK : Team::WHITE;
-
-	vector<shared_ptr<Piece>> pieces = {
-		make_shared<Queen>(Queen(team)),
-		make_shared<Bishop>(Bishop(team)),
-		make_shared<King>(King(team, true)),
-		make_shared<Knight>(Knight(team)),
-		make_shared<Rock>(Rock(team)),
-		make_shared<Pawn>(Pawn(team)),
-	};
-
 	Board& board = Board::getInstance();
-	for (shared_ptr<Piece>& piece : pieces) {
+	
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++)
+		{
+			Location checkedPieceLocation = { x, y };
 
-		LocationContainer realPositions = board.calculatePossiblePosition(*piece, loc);// piece->getPossiblePositions(loc);
+			// Pour chacune des pièces, on regarde si la pièce représente un danger.
+			PieceContainer& pieceCtr = this->board[x][y];
+			if (!pieceCtr.has_value()) continue;
+			Piece& piece = **pieceCtr;
+			if (piece.getTeam() == team) continue;
+			LocationContainer locations = calculatePossiblePosition(piece, checkedPieceLocation, true);
 
-		// Pour chacune de ces possibles positions, on regarde s'il y a une pièce à l'extrémité.
-		for (Location& pos : realPositions) {
-
-			// S'il y a une pièce du type de piece, alors ça veut dire que la loc est dangereuse.
-			// cout << pos << endl;
-			PieceContainer& possiblePiece = board.getPiece(pos);
-
-			// On regarde si la position contient une pièce.
-			if (possiblePiece.has_value()) {
-				Piece& selectedPiece = **possiblePiece;
-				// Si les deux pièces sont du même type, on s'en fou. Elle devrait pas le manger.
-				if (selectedPiece.getTeam() != piece->getTeam()) {
-					// Si les types des pièces sont les mêmes, y'a présence de danger.
-					if (typeid(selectedPiece) == typeid(*piece)) {
-						// cout << "Danger pour la location: " << loc << " avec les coordonnées: " << pos << endl;
-						return false;
-					}
+			// On regarde les positions possibles d'une pièce peut atteindre loc
+			for (const Location& checkLocation : locations) {
+				if (checkLocation == loc) {
+					cout << "La pièce " << piece << " " << checkedPieceLocation << " représente un danger." << endl;
+					return false;
 				}
 			}
+
 		}
 	}
 	return true;

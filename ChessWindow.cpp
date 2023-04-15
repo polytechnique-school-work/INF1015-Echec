@@ -20,8 +20,10 @@ using namespace model;
 ChessWindow::ChessWindow(QWidget* parent): QMainWindow(parent)
 {
     Board& board = Board::getInstance();
+    // board.generateBoard("XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX");
     // board.generateBoard("BRBCXXBQBKXXBCBRBPXXXXBPXXBPBPBPBFBPXXXXXXXXWPXXXXXXBPXXXXXXXXXXXXWPXXXXWPBPXXBFXXXXXXXXXXXXXXWPWPXXWPWPXXXXXXXXWRWCWFWQWKWFWCWR");
     generateWindow();
+
     // board.movePiece({0, 6}, {0, 5});
     refreshWindow();
 }
@@ -58,7 +60,8 @@ void ChessWindow::generateWindow()
     qvboxLayout->addWidget(button);
     qvboxLayout->addWidget(buttonSave);
     
-
+    Board& board = Board::getInstance();
+    model::Team team = model::Game::getInstance().getTurn();
 
 
     for (int row = 0; row < 8; ++row) {
@@ -95,8 +98,8 @@ void ChessWindow::refreshTeam()
     model::Team team = model::Game::getInstance().getTurn();
     std::string tour = "C'est au tour de: ";
     tour += team == model::Team::WHITE ? "blanc" : "noir";
-    /*if (board.isEchec(team))
-        tour += "\nLe roi est en échec!!!";*/
+    if (board.isEchec(team))
+        tour += "\nLe roi est en échec!!!";
     text->setText(tour.c_str());
 }
 
@@ -105,7 +108,6 @@ void ChessWindow::saveBoard()
     Board& board = Board::getInstance();
     board.saveBoard();
 }
-
 
 void ChessWindow::refreshWindow()
 {
@@ -117,8 +119,12 @@ void ChessWindow::refreshWindow()
     if (vueGame.getSelected().has_value()) {
         possibleLocations = board.possibleMoves(*vueGame.getSelected());
     }
+    model::Team team = model::Game::getInstance().getTurn();
+
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
+
+      
 
             QLabel* label = dynamic_cast<QLabel*>(grid->itemAtPosition(row, col)->widget());
             PieceContainer& pieceCtr = board.getPiece({ col, row });
@@ -131,6 +137,11 @@ void ChessWindow::refreshWindow()
                 label->clear();
             }
 
+            if (!board.isSafeMove({ col, row }, team)) {
+                setLabelUnsafe(label);
+            }
+
+
             auto it = std::find(possibleLocations.begin(), possibleLocations.end(), Location(col, row));
             QPainter qpainter = QPainter();
             if (it != possibleLocations.end()) {
@@ -142,6 +153,37 @@ void ChessWindow::refreshWindow()
 
     refreshTeam();
 }
+
+void ChessWindow::setLabelUnsafe(QLabel* label)
+{
+    int width = label->width();
+    int height = label->height();
+    QPixmap pixmap(width, height);
+    QImage image = label->pixmap().toImage();
+
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+
+    if (!image.isNull()) {
+        image = image.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QRect rect(image.rect());
+        QRect devRect(0, 0, painter.device()->width(), painter.device()->height());
+        rect.moveCenter(devRect.center());
+        painter.drawImage(rect.topLeft(), image);
+    }
+    QColor color;
+    color.setRgb(216, 76, 76);
+    color.setAlpha(255);
+    QPen pen(color, 4, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen);
+
+    painter.drawLine(0, 0, width, height);
+    painter.drawLine(width, 0, 0, height);
+
+    label->setPixmap(pixmap);
+    label->setScaledContents(true);
+}
+
 
 void ChessWindow::setLabelSelected(QLabel* label)
 {
@@ -191,20 +233,29 @@ void ChessWindow::onClickChess(model::Location loc)
 
     PieceContainer& pieceCtr = board.getPiece(loc);
 
+    // Déplacement d'une pièce
     if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc))
+    {
+        std::cout << "1" << std::endl;
         this->movePiece(*vueGame.getSelected(), loc);
-
+    }
+    // Click dans un emplacement sans pièce
     else if (!pieceCtr.has_value()) {
+        std::cout << "2" << std::endl;
         resetSelect();
     }
 
+    // Sélection d'une pièce
     else {
+        std::cout << "3" << std::endl;
         Team& team = modelGame.getTurn();
         Piece& piece = **pieceCtr;
         if (piece.getTeam() == team) {
+            std::cout << "4" << std::endl;
             selectPiece(loc);
         }
         else {
+            std::cout << "5" << std::endl;
             resetSelect();
         }
 

@@ -49,6 +49,8 @@ namespace model {
 		void removeUnsafeMove(LocationContainer& possibleMoves, Team team);
 		void removeSameTeamMove(LocationContainer& possibleMoves, Team team);
 
+		LocationContainer getEveryDangerousPlaces(Team& team);
+
 		bool isMovePossible(Location src, Location dst);
 
 		void saveBoard();
@@ -60,7 +62,7 @@ namespace model {
 		void setPieceAt(PieceContainer& piece, Location loc);
 
 	private:
-		LocationContainer calculatePossiblePosition(Piece& piece, Location pos);
+		LocationContainer calculatePossiblePosition(Piece& piece, Location pos, bool remove);
 
 		LocationContainer calculateKingSafePosition(Piece& piece, Location pos);
 
