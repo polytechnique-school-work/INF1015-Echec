@@ -31,7 +31,6 @@ void Board::movePiece(Location src, Location dst)
 LocationContainer Board::possibleMoves(Location src)
 {
 	Game& game = Game::getInstance();
-	Team team = game.getTurn();
 	LocationContainer locations = {};
 	PieceContainer& piece = this->getPiece(src);
 	if (piece.has_value()) {
@@ -117,7 +116,7 @@ Location Board::getKingLocation(Team& team) {
 	{
 		for (int j = 0; j < BOARD_SIZE; j++)
 		{
-			if (board[i][j].has_value() && typeid(**board[i][j]) == typeid(King) && (**board[i][j]).getTeam() == team) return { j, i };
+			if (board[j][i].has_value() && typeid(**board[j][i]) == typeid(King) && (**board[j][i]).getTeam() == team) return { j, i };
 		}
 	}
 }
@@ -184,12 +183,10 @@ void model::Board::generateBoard(const std::string& defaultBoard)
 // Vérifier si le roi est en échec
 bool model::Board::isEchec(Team team)
 {
+	LocationContainer locations = getEveryDangerousPlaces(team);
 	Location loc = getKingLocation(team);
-
-	cout << "Position du roi: " << loc << endl;
-
-	// cout << "Check du save move pour la pièce " << loc << " de la team " << (team == Team::WHITE ? "white" : "black") << endl;
-	return !isSafeMove(loc, team);
+	auto&& it = find(locations.begin(), locations.end(), loc);
+	return it != locations.end();
 }
 
 // Vérifier si le roi est en échec et mat
@@ -275,6 +272,8 @@ LocationContainer Board::getEveryDangerousPlaces(Team& team) {
 		for (int x = 0; x < BOARD_SIZE; x++)
 		{
 			if (!isSafeMove({ x, y }, team)) {
+
+				// cout << this->getPiece({ x, y }) << " " << Location(x, y) << " représente un danger pour " <<  << endl;
 				locations.push_back({ x, y });
 			}
 		}
@@ -307,7 +306,7 @@ bool Board::isSafeMove(const Location& loc, Team& team)
 			// On regarde les positions possibles d'une pièce peut atteindre loc
 			for (const Location& checkLocation : locations) {
 				if (checkLocation == loc) {
-					cout << "La pièce " << piece << " " << checkedPieceLocation << " représente un danger." << endl;
+					cout << "La pièce " << piece << " " << checkedPieceLocation << " représente un danger pour l'emplacement " << loc << "." << endl;
 					return false;
 				}
 			}

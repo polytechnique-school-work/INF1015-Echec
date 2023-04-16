@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "Game.hpp"
 #include <QPushButton>
+#include <algorithm>
 
 #include "VueGame.hpp"
 
@@ -20,11 +21,7 @@ using namespace model;
 ChessWindow::ChessWindow(QWidget* parent): QMainWindow(parent)
 {
     Board& board = Board::getInstance();
-    // board.generateBoard("XXXXXXXXXXBFXXXXXXBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWKWPXXXXXXXXXXXXXXXXXXXXXXBCXXXXXXXXXXXXXXXXXXXXXXBRXXXXXXXXXXXXXXXXXXXXXX");
-    // board.generateBoard("BRBCXXBQBKXXBCBRBPXXXXBPXXBPBPBPBFBPXXXXXXXXWPXXXXXXBPXXXXXXXXXXXXWPXXXXWPBPXXBFXXXXXXXXXXXXXXWPWPXXWPWPXXXXXXXXWRWCWFWQWKWFWCWR");
     generateWindow();
-
-    // board.movePiece({0, 6}, {0, 5});
     refreshWindow();
 }
 
@@ -116,11 +113,15 @@ void ChessWindow::refreshWindow()
     vue::Game& vueGame = vue::Game::getInstance();
     Board& board = Board::getInstance();
     model::LocationContainer possibleLocations = {};
+
+
+
     if (vueGame.getSelected().has_value()) {
         possibleLocations = board.possibleMoves(*vueGame.getSelected());
     }
     model::Team team = model::Game::getInstance().getTurn();
 
+    LocationContainer test = board.getEveryDangerousPlaces(team);
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
 
@@ -137,7 +138,11 @@ void ChessWindow::refreshWindow()
                 label->clear();
             }
 
-            if (!board.isSafeMove({ col, row }, team)) {
+           /* if (!board.isSafeMove({ col, row }, team)) {
+                setLabelUnsafe(label);
+            }*/
+
+            if (std::find(test.begin(), test.end(), Location(col, row )) != test.end()) {
                 setLabelUnsafe(label);
             }
 
@@ -236,26 +241,22 @@ void ChessWindow::onClickChess(model::Location loc)
     // Déplacement d'une pièce
     if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc))
     {
-        std::cout << "1" << std::endl;
+        std::cout << "Déplacement d'une pièce" << std::endl;
         this->movePiece(*vueGame.getSelected(), loc);
     }
     // Click dans un emplacement sans pièce
     else if (!pieceCtr.has_value()) {
-        std::cout << "2" << std::endl;
         resetSelect();
     }
 
     // Sélection d'une pièce
     else {
-        std::cout << "3" << std::endl;
         Team& team = modelGame.getTurn();
         Piece& piece = **pieceCtr;
         if (piece.getTeam() == team) {
-            std::cout << "4" << std::endl;
             selectPiece(loc);
         }
         else {
-            std::cout << "5" << std::endl;
             resetSelect();
         }
 
