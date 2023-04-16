@@ -4,7 +4,7 @@
 
 model::History::~History()
 {
-	std::cout << "Deplacement de " << afterPiece << " vers " << beforePiece << std::endl;
+	// std::cout << "Deplacement de " << afterPiece << " vers " << beforePiece << std::endl;
 	Board& board =  Board::getInstance();
 
 	board.setPieceAt(this->beforePiece, before);
@@ -18,5 +18,5 @@ model::History::History(Location before, Location after) : before(before), after
 	BoardContainer& board = Board::getInstance().getBoardContainer();
 	this->afterPiece = board[after.first][after.second];
 	this->beforePiece = board[before.first][before.second];
-	std::cout << "Deplacement de " << beforePiece << " vers " << afterPiece << std::endl;
+	// std::cout << "Deplacement de " << beforePiece << " vers " << afterPiece << std::endl;
 } 

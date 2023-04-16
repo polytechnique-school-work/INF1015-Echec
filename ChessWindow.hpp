@@ -17,6 +17,7 @@ public slots:
 private:
 	QGridLayout* grid;
 	QLabel* text;
+	bool isMat = false;
 	void selectPiece(model::Location loc);
 	void movePiece(model::Location src, model::Location dst);
 	void resetSelect();
@@ -25,6 +26,8 @@ private:
 	void refreshTeam();
 	void saveBoard();
 	void setLabelUnsafe(QLabel* label);
+	void changeCheckBox();
+	bool showDangerousMoves = false;
 };
 
 

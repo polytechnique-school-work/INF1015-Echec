@@ -83,7 +83,12 @@ namespace model {
 	}
 
 	std::ostream& operator<<(std::ostream& out, const PieceContainer& piece) {
-		piece.has_value() ? cout << (**piece) : cout << "*";
+		piece.has_value() ? out << (**piece) : out << "*";
+		return out;
+	}
+
+	std::ostream& operator<<(std::ostream& out, const Team& team) {
+		team == Team::WHITE ? out << "white" : out << "black";
 		return out;
 	}
 
@@ -102,8 +107,6 @@ int main(int argc, char *argv[])
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);
-
-	Board& board = Board::getInstance();
 
 	executer();
 	ChessWindow chessWindow = ChessWindow();

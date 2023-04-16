@@ -9,7 +9,9 @@
 #include <algorithm>
 #include "Game.hpp"
 #include <QPushButton>
+#include <QCheckBox>
 #include <algorithm>
+#include <QStackedLayout>
 
 #include "VueGame.hpp"
 
@@ -27,39 +29,35 @@ ChessWindow::ChessWindow(QWidget* parent): QMainWindow(parent)
 
 void ChessWindow::generateWindow()
 {
-
-    // QVBoxLayout* qvBoxLayout = new QVBoxLayout(this);
-
     auto widgetPrincipal = new QWidget(this);
-    // qvBoxLayout->addWidget(widgetPrincipal);
-
-	setWindowTitle("Échecs");
-
-
-    // Mettre le QVBoxLayout parent de widgetPrincipal
+	setWindowTitle("Jeu d'échecs - Gabriel Landry & Thomas Petrie");
     QVBoxLayout* qvboxLayout = new QVBoxLayout(widgetPrincipal);
 
-    // Contient le plateau
     auto chessWidget = new QWidget();
 	grid = new QGridLayout(chessWidget);
 
-    QPushButton* button = new QPushButton("Rollback", widgetPrincipal);
+    QPushButton* button = new QPushButton("Retour en arrière", widgetPrincipal);
     connect(button, &QPushButton::clicked, this, [this]() {rollback(); });
 
-    QPushButton* buttonSave = new QPushButton("Saveboard", widgetPrincipal);
+    QPushButton* buttonSave = new QPushButton("Sauvegarder l'échéquier", widgetPrincipal);
     connect(buttonSave, &QPushButton::clicked, this, [this]() {saveBoard(); });
 
+    QCheckBox* showDangerousMoves = new QCheckBox("Afficher les positions attaquées", widgetPrincipal);
+    connect(showDangerousMoves, &QCheckBox::stateChanged, [this]() {changeCheckBox(); });
+
+   
     text = new QLabel();
+
     text->setText("Équipe: ");
 
     qvboxLayout->addWidget(chessWidget);
     qvboxLayout->addWidget(text);
+    qvboxLayout->addWidget(showDangerousMoves);
     qvboxLayout->addWidget(button);
     qvboxLayout->addWidget(buttonSave);
     
     Board& board = Board::getInstance();
     model::Team team = model::Game::getInstance().getTurn();
-
 
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
@@ -79,7 +77,6 @@ void ChessWindow::generateWindow()
         }
     }
 
-
     setCentralWidget(widgetPrincipal);
 }
 
@@ -94,9 +91,16 @@ void ChessWindow::refreshTeam()
     model::Board& board = model::Board::getInstance();
     model::Team team = model::Game::getInstance().getTurn();
     std::string tour = "C'est au tour de: ";
-    tour += team == model::Team::WHITE ? "blanc" : "noir";
+    auto&& teamStr = [](Team& team) {return (team == model::Team::WHITE ? "♖ (blancs)" : "♜ (noirs)"); };
+    tour += teamStr(team);
     if (board.isEchec(team))
-        tour += "\nLe roi est en échec!!!";
+        tour += "\n⚠️ votre roi est en échec";
+    if (isMat) {
+        Team winner = team == Team::WHITE ? Team::BLACK : Team::WHITE;
+        tour += "\n❌ la partie est terminée, les ";
+        tour += teamStr(winner);
+        tour += " ont gagnés.";
+    }
     text->setText(tour.c_str());
 }
 
@@ -108,24 +112,17 @@ void ChessWindow::saveBoard()
 
 void ChessWindow::refreshWindow()
 {
-  
-    // testDraw();
     vue::Game& vueGame = vue::Game::getInstance();
     Board& board = Board::getInstance();
     model::LocationContainer possibleLocations = {};
-
-
 
     if (vueGame.getSelected().has_value()) {
         possibleLocations = board.possibleMoves(*vueGame.getSelected());
     }
     model::Team team = model::Game::getInstance().getTurn();
 
-    LocationContainer test = board.getEveryDangerousPlaces(team);
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
-
-      
 
             QLabel* label = dynamic_cast<QLabel*>(grid->itemAtPosition(row, col)->widget());
             PieceContainer& pieceCtr = board.getPiece({ col, row });
@@ -138,14 +135,9 @@ void ChessWindow::refreshWindow()
                 label->clear();
             }
 
-           /* if (!board.isSafeMove({ col, row }, team)) {
-                setLabelUnsafe(label);
-            }*/
-
-            if (std::find(test.begin(), test.end(), Location(col, row )) != test.end()) {
+           if (!board.isSafeMove({ col, row }, team) && this->showDangerousMoves) {
                 setLabelUnsafe(label);
             }
-
 
             auto it = std::find(possibleLocations.begin(), possibleLocations.end(), Location(col, row));
             QPainter qpainter = QPainter();
@@ -189,6 +181,12 @@ void ChessWindow::setLabelUnsafe(QLabel* label)
     label->setScaledContents(true);
 }
 
+void ChessWindow::changeCheckBox()
+{
+    showDangerousMoves = !showDangerousMoves;
+    refreshWindow();
+}
+
 
 void ChessWindow::setLabelSelected(QLabel* label)
 {
@@ -198,6 +196,7 @@ void ChessWindow::setLabelSelected(QLabel* label)
     QImage image = label->pixmap().toImage();
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
+
     // Perte de qualité sur l'image, à cause du resize, je sais pas comment le fix.
     if(!image.isNull()) {
         image = image.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -232,6 +231,8 @@ std::string ChessWindow::getImage(model::Piece& piece)
 
 void ChessWindow::onClickChess(model::Location loc)
 {
+
+    if (isMat) return;
     model::Board& board = model::Board::getInstance();
     vue::Game& vueGame = vue::Game::getInstance();
     model::Game& modelGame = model::Game::getInstance();
@@ -241,7 +242,6 @@ void ChessWindow::onClickChess(model::Location loc)
     // Déplacement d'une pièce
     if (vueGame.getSelected().has_value() && board.isMovePossible(*vueGame.getSelected(), loc))
     {
-        std::cout << "Déplacement d'une pièce" << std::endl;
         this->movePiece(*vueGame.getSelected(), loc);
     }
     // Click dans un emplacement sans pièce
@@ -276,10 +276,9 @@ void ChessWindow::movePiece(model::Location src, model::Location dst)
 {
     //std::cout << "MovePiece: \n" << "\tSrc: " << src << "\n" << "\tDst: " << dst <<std::endl;
     model::Board& board = model::Board::getInstance();
-    model::Game& modelGame = model::Game::getInstance();
-
     board.movePiece(src, dst);
-    modelGame.nextTurn();
+    Team team = Game::getInstance().getTurn();
+    isMat = board.isMat(team);
     resetSelect();
 }
 

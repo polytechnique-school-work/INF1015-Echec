@@ -30,7 +30,7 @@ namespace model {
 		// Si le roi n'a pas de possibleMoves (faire en sorte de retirer les moves dangereux) ET s'il
 		// n'est pas possible de manger une pièce qui permet un retour à la normal (et donc que le roi
 		// n'est pas possible d'être mangé au prochain tour) ET si le roi est en échec.
-		bool isMat(Team team, Location loc);
+		bool isMat(Team team);
 
 		PieceContainer pieceConverter(char color, char piece);
 		static Board& getInstance();
@@ -74,4 +74,5 @@ namespace model {
 	};
 
 	std::ostream& operator<<(std::ostream& out, const Board& board);
+	std::ostream& operator<<(std::ostream& out, const Team& team);
 }

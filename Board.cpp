@@ -21,21 +21,21 @@ PieceContainer& Board::getPiece(Location src) const {
 // Déplacer une pièce d'une position src à dst
 void Board::movePiece(Location src, Location dst)
 {
+	model::Game& modelGame = model::Game::getInstance();
 	this->history.push(unique_ptr<History>(new History(src, dst)));
 	this->board[dst.first][dst.second] = move(this->board[src.first][src.second]);
 	this->board[src.first][src.second] = {};
 	(**this->getPiece(dst)).incrementMoves();
+	modelGame.nextTurn();
 }
 
 // Obtenir les déplacements possibles pour une pièce à la position src
 LocationContainer Board::possibleMoves(Location src)
 {
-	Game& game = Game::getInstance();
 	LocationContainer locations = {};
 	PieceContainer& piece = this->getPiece(src);
 	if (piece.has_value()) {
-		Board& board = Board::getInstance();
-		locations = board.calculateKingSafePosition(**piece, src);
+		locations = calculateKingSafePosition(**piece, src);
 	}
 
 	// Retrait des positions si y'a possibilité d'échec
@@ -119,18 +119,18 @@ Location Board::getKingLocation(Team& team) {
 			if (board[j][i].has_value() && typeid(**board[j][i]) == typeid(King) && (**board[j][i]).getTeam() == team) return { j, i };
 		}
 	}
+	// throw logic_error("Impossible de trouver le roi");
 }
 
 void model::Board::removeTestedUnesafeLocation(Location& before, LocationContainer& possibleMoves)
 {
-	/*LocationContainer safeLocations = {};
-	Team& team = Game::getInstance().getTurn();
-	for (Location after : possibleMoves) {
+	LocationContainer newLocationContainer = possibleMoves;
+	Team team = (**this->getPiece(before)).getTeam();
+	for (const Location& after : newLocationContainer) {
 		movePiece(before, after);
-		if (!isEchec(team)) safeLocations.push_back(after);
+		if (isEchec(team)) possibleMoves.remove(after);
 		rollback();
 	}
-	possibleMoves = safeLocations;*/
 }
 
 
@@ -190,9 +190,23 @@ bool model::Board::isEchec(Team team)
 }
 
 // Vérifier si le roi est en échec et mat
-bool model::Board::isMat(Team team, Location loc)
+bool model::Board::isMat(Team team)
 {
-	return false;
+	for (int y = 0; y < BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < BOARD_SIZE; x++)
+		{
+			PieceContainer& pieceCtr = getPiece({ x,y });
+			if (!pieceCtr.has_value()) continue;
+			Piece& piece = **pieceCtr;
+			if (piece.getTeam() != team) continue;
+
+			LocationContainer locations = possibleMoves({ x,y });
+			if (locations.size() != 0) return false;
+		}
+	}
+
+	return true;
 }
 
 // Permet de convertir les pièces du board en objet
@@ -272,8 +286,6 @@ LocationContainer Board::getEveryDangerousPlaces(Team& team) {
 		for (int x = 0; x < BOARD_SIZE; x++)
 		{
 			if (!isSafeMove({ x, y }, team)) {
-
-				// cout << this->getPiece({ x, y }) << " " << Location(x, y) << " représente un danger pour " <<  << endl;
 				locations.push_back({ x, y });
 			}
 		}
@@ -287,9 +299,7 @@ LocationContainer Board::getEveryDangerousPlaces(Team& team) {
 * Vérifie si la position loc est safe pour l'équipe team.
 **/
 bool Board::isSafeMove(const Location& loc, Team& team)
-{
-	Board& board = Board::getInstance();
-	
+{	
 	for (int y = 0; y < BOARD_SIZE; y++)
 	{
 		for (int x = 0; x < BOARD_SIZE; x++)
@@ -306,7 +316,7 @@ bool Board::isSafeMove(const Location& loc, Team& team)
 			// On regarde les positions possibles d'une pièce peut atteindre loc
 			for (const Location& checkLocation : locations) {
 				if (checkLocation == loc) {
-					cout << "La pièce " << piece << " " << checkedPieceLocation << " représente un danger pour l'emplacement " << loc << "." << endl;
+					// cout << "La pièce " << piece << " " << checkedPieceLocation << " représente un danger pour l'emplacement " << loc << "." << endl;
 					return false;
 				}
 			}
