@@ -61,6 +61,8 @@ namespace model {
 
 		void setPieceAt(PieceContainer& piece, Location loc);
 
+		static int nbExecution;
+
 	private:
 		LocationContainer calculatePossiblePosition(Piece& piece, Location pos, bool remove);
 

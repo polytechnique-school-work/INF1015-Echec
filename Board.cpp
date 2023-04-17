@@ -13,8 +13,11 @@
 using namespace std;
 using namespace model;
 
+int Board::nbExecution = 0;
+
 // Obtenir une pièce grâce à une position src
 PieceContainer& Board::getPiece(Location src) const {
+	nbExecution++;
 	return this->board[src.first][src.second];
 }
 

@@ -12,11 +12,16 @@
 #include <QCheckBox>
 #include <algorithm>
 #include <QStackedLayout>
+#include <chrono>
 
 #include "VueGame.hpp"
 
 #include <iostream>
 #include "Board.hpp"
+
+
+
+#include "Utils.hpp"
 
 using namespace model;
 
@@ -261,7 +266,6 @@ void ChessWindow::onClickChess(model::Location loc)
         }
 
     }
-
     refreshWindow();
 }
 

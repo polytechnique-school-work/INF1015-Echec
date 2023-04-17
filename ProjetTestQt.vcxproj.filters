@@ -111,6 +111,9 @@
     <ClInclude Include="VueGame.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ChessWindow.hpp">
