@@ -27,6 +27,7 @@ private:
 	void saveBoard();
 	void setLabelUnsafe(QLabel* label);
 	void changeCheckBox();
+	void changeBoard(int index);
 	bool showDangerousMoves = false;
 };
 

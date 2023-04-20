@@ -22,3 +22,7 @@ Team& model::Game::getTurn()
 {
 	return turn;
 }
+
+void model::Game::setTurn(Team team) {
+	this->turn = team;
+}

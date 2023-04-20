@@ -35,9 +35,11 @@ LocationContainer Pawn::getPossiblePositions(Location& loc) const
 	LocationContainer secondList = { Location(0, 1 * position), Location(0, 2 * position) };
 	for (Location& pos : secondList) {
 		Location boardLocation = { loc.first + pos.first, loc.second + pos.second };
+		
 		if (boardLocation.first < 0 || boardLocation.first >= BOARD_SIZE || boardLocation.second < 0 || boardLocation.second >= BOARD_SIZE) {
 			continue;
 		}
+
 		else if (board.getPiece({ boardLocation.first, boardLocation.second }).has_value()) {
 			continue;
 		}

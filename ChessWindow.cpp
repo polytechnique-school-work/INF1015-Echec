@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <QStackedLayout>
 #include <chrono>
-
+#include <QComboBox>
 #include "VueGame.hpp"
 
 #include <iostream>
@@ -50,6 +50,21 @@ void ChessWindow::generateWindow()
     QCheckBox* showDangerousMoves = new QCheckBox("Afficher les positions attaquées", widgetPrincipal);
     connect(showDangerousMoves, &QCheckBox::stateChanged, [this]() {changeCheckBox(); });
 
+
+    QComboBox* selectMenu = new QComboBox();
+
+
+
+    QString selected[4] = { "Début habituel", "Milieu de partie", "Première fin de partie", "Deuxième fin de partie" };
+    int i = 0;
+    for (QString text : selected) {
+        selectMenu->addItem(text);
+        selectMenu->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+        i++;
+    }
+
+    connect(selectMenu, &QComboBox::currentIndexChanged, [this](int i) { changeBoard(i); });
+
    
     text = new QLabel();
 
@@ -59,6 +74,7 @@ void ChessWindow::generateWindow()
     qvboxLayout->addWidget(text);
     qvboxLayout->addWidget(showDangerousMoves);
     qvboxLayout->addWidget(button);
+    qvboxLayout->addWidget(selectMenu);
     qvboxLayout->addWidget(buttonSave);
     
     Board& board = Board::getInstance();
@@ -83,6 +99,35 @@ void ChessWindow::generateWindow()
     }
 
     setCentralWidget(widgetPrincipal);
+}
+
+void ChessWindow::changeBoard(int i) {
+    model::Board& board = model::Board::getInstance();
+    std::string boardSelected;
+    switch (i)
+    {
+    case 0: /* Default */
+        boardSelected = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
+        break;
+    case 1: /* Avancé */
+        boardSelected = "BRXXXXXXBKBFXXBRBPBPBPXXXXBPBPBPXXXXBCBPXXXXXXXXXXXXXXXXBPXXWCXXXXXXXXXXWPXXXXXXXXWPXXWPWPXXXXWPWPXXWPXXXXXXWPXXWRWCXXXXWKXXXXWR";
+        break;
+    case 2: /* Fin de jeu 1 */
+        boardSelected = "XXXXXXBKXXBRXXXXBPXXXXXXXXXXBPXXXXXXXXXXXXXXXXBPXXBPXXXXWRXXXXXXXXXXXXBPXXXXWPXXWPWPXXXXXXXXXXWPXXXXXXXXXXXXXXXXXXXXWRXXWKXXXXXX";
+        break;
+    case 3: /* Fin de jeu 2 */
+        boardSelected = "XXXXXXXXXXXXXXXXBPBPXXXXXXBKBPBPXXXXXXBPXXXXXXXXXXXXXXXXXXBFWPXXXXXXWPXXXXXXXXXXXXXXXXXXXXXXXXXXWPXXXXXXXXBFWPWPXXXXXXWKXXXXXXXX";
+        break;
+    default:
+        boardSelected = "BRBCBFBQBKBFBCBRBPBPBPBPBPBPBPBPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXWPWPWPWPWPWPWPWPWRWCWFWQWKWFWCWR";
+        break;
+    }
+
+
+    board.generateBoard(boardSelected);
+    model::Game& game = model::Game::getInstance();
+    game.setTurn(Team::WHITE);
+    refreshWindow();
 }
 
 void ChessWindow::rollback() {
