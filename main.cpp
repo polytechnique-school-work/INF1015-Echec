@@ -37,60 +37,58 @@ void initialiserBibliothequeCours([[maybe_unused]] int argc, [[maybe_unused]] ch
 
 namespace model {
 
+	//std::ostream& operator<<(std::ostream& out, const Piece& piece) {
+	//	out << (piece.team == Team::WHITE ? "\033[1;97m" : "\033[1;30m");
+	//	piece.display(out);
+	//	out << "\033[0m";
+	//	return out;
+	//}
 
+	//std::ostream& operator<<(std::ostream& out, const Board& board)
+	//{
+	//	static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
+	//	out << ligneDeSeparation << endl;
+	//	for (int y = 0; y < BOARD_SIZE; y++)
+	//	{
+	//		for (int x = 0; x < BOARD_SIZE; x++) {
 
-	std::ostream& operator<<(std::ostream& out, const Piece& piece) {
-		out << (piece.team == Team::WHITE ? "\033[1;97m" : "\033[1;30m");
-		piece.display(out);
-		out << "\033[0m";
-		return out;
-	}
+	//			auto&& piece = board.getPiece(Location(x, y));
+	//			out << piece;
 
-	std::ostream& operator<<(std::ostream& out, const Board& board)
-	{
-		static const string ligneDeSeparation = "\033[32m─────────────────────────────────────────────────────────────\033[0m\n";
-		out << ligneDeSeparation << endl;
-		for (int y = 0; y < BOARD_SIZE; y++)
-		{
-			for (int x = 0; x < BOARD_SIZE; x++) {
+	//			out << "\t";
+	//		}
 
-				auto&& piece = board.getPiece(Location(x, y));
-				out << piece;
+	//		out << endl;
+	//	}
 
-				out << "\t";
-			}
+	//	out << ligneDeSeparation << endl;
 
-			out << endl;
-		}
+	//	return out;
+	//}
 
-		out << ligneDeSeparation << endl;
+	//std::ostream& operator<<(std::ostream& out, const Location& loc) {
+	//	out << "(x: " << loc.first << " y: " << loc.second << ")";
+	//	return out;
+	//}
 
-		return out;
-	}
+	//std::ostream& operator<<(std::ostream& out, const LocationContainer& locations) {
+	//	out << "Locations: " << endl;
+	//	for (auto&& loc : locations)
+	//	{
+	//		out << "\t" << loc << endl;
+	//	}
+	//	return out;
+	//}
 
-	std::ostream& operator<<(std::ostream& out, const Location& loc) {
-		out << "(x: " << loc.first << " y: " << loc.second << ")";
-		return out;
-	}
+	//std::ostream& operator<<(std::ostream& out, const PieceContainer& piece) {
+	//	piece.has_value() ? out << (**piece) : out << "*";
+	//	return out;
+	//}
 
-	std::ostream& operator<<(std::ostream& out, const LocationContainer& locations) {
-		out << "Locations: " << endl;
-		for (auto&& loc : locations)
-		{
-			out << "\t" << loc << endl;
-		}
-		return out;
-	}
-
-	std::ostream& operator<<(std::ostream& out, const PieceContainer& piece) {
-		piece.has_value() ? out << (**piece) : out << "*";
-		return out;
-	}
-
-	std::ostream& operator<<(std::ostream& out, const Team& team) {
-		team == Team::WHITE ? out << "white" : out << "black";
-		return out;
-	}
+	//std::ostream& operator<<(std::ostream& out, const Team& team) {
+	//	team == Team::WHITE ? out << "white" : out << "black";
+	//	return out;
+	//}
 
 }
 
@@ -104,6 +102,7 @@ void executer() {
 
 int main(int argc, char *argv[])
 {
+	using namespace vue;
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);

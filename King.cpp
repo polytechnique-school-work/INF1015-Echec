@@ -9,10 +9,7 @@ King::King(Team team) : Piece(team), bypass(false)
 	}
 	instanceCount += 1;
 }
-King::King(Team team, bool bypass) : Piece(team), bypass(bypass)
-{
 
-}
 model::King::~King()
 {
 	if (!this->bypass) instanceCount--;
@@ -22,10 +19,12 @@ LocationContainer King::getPossiblePositions([[maybe_unused]] Location& loc) con
 	return { {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1} };
 }
 
+// Pas dans les lignes couvertes par les tests : permet d'afficher lors des tests
 void King::display(std::ostream& out) const {
 	out << "K";
 }
 
+// Pas dans les lignes couvertes par les tests : utile pour la vue
 std::string model::King::getName()
 {
 	return "king";

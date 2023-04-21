@@ -24,6 +24,7 @@
 #include "Utils.hpp"
 
 using namespace model;
+using namespace vue;
 
 ChessWindow::ChessWindow(QWidget* parent): QMainWindow(parent)
 {
@@ -157,7 +158,7 @@ void ChessWindow::refreshTeam()
 void ChessWindow::saveBoard()
 {
     Board& board = Board::getInstance();
-    board.saveBoard();
+    std::cout << board.saveBoard() << std::endl;
 }
 
 void ChessWindow::refreshWindow()
@@ -326,7 +327,7 @@ void ChessWindow::movePiece(model::Location src, model::Location dst)
     //std::cout << "MovePiece: \n" << "\tSrc: " << src << "\n" << "\tDst: " << dst <<std::endl;
     model::Board& board = model::Board::getInstance();
     board.movePiece(src, dst);
-    Team team = Game::getInstance().getTurn();
+    Team team = model::Game::getInstance().getTurn();
     isMat = board.isMat(team);
     resetSelect();
 }

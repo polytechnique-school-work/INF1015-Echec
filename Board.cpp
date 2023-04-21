@@ -57,7 +57,7 @@ bool Board::isMovePossible(Location src, Location dst)
 	return it != possibleMoves.end();
 }
 
-void model::Board::saveBoard()
+std::string model::Board::saveBoard()
 {
 	string value = "";
 	for (int i = 0; i < BOARD_SIZE; i++)
@@ -67,7 +67,7 @@ void model::Board::saveBoard()
 			value += convertPieceToBoard(board[j][i]);
 		}
 	}
-	cout << value << endl;
+	return value;
 }
 
 string Board::convertPieceToBoard(PieceContainer& pieceContainer) {
@@ -214,37 +214,27 @@ bool model::Board::isMat(Team team)
 
 // Permet de convertir les pièces du board en objet
 PieceContainer Board::pieceConverter(char color, char piece) {
-	/*
-	Bishop = F
-	Pawn = P
-	King = K
-	Queen = Q
-	Rock = R
-	Knight = C
 
-	Black = B
-	White = W
-	*/
 	Team team = color == 'W' ? Team::WHITE : Team::BLACK;
 
 	switch (piece)
 	{
-	case 'F':
+	case 'F': // Bishop
 		return make_unique<Bishop>(Bishop(team));
-	case 'P':
+	case 'P': // Pawn
 		return make_unique<Pawn>(Pawn(team));
-	case 'K':
+	case 'K': // King
 		return make_unique<King>(King(team));
-	case 'Q':
+	case 'Q': // Queen
 		return make_unique<Queen>(Queen(team));
-	case 'R':
+	case 'R': // Rook
 		return make_unique<Rock>(Rock(team));
-	case 'C':
+	case 'C': // Knight
 		return make_unique<Knight>(Knight(team));
-	case 'X':
+	case 'X': // No pieces
 		return {};
 	default:
-		return {}; 
+		break;
 	}
 }
 
@@ -332,16 +322,4 @@ bool Board::isSafeMove(const Location& loc, Team& team)
 void Board::removeUnsafeMove(LocationContainer& possibleMoves, Team team)
 {
 	possibleMoves.remove_if([&](const Location& location) {return !isSafeMove(location, team); });
-}
-
-void model::Board::removeSameTeamMove(LocationContainer& possibleMoves, Team team)
-{
-	for (Location& location : possibleMoves) {
-		PieceContainer& pieceAtLocationContainer = this->getPiece(location);
-		if (pieceAtLocationContainer.has_value()) {
-			Piece& pieceAtLocation = (**pieceAtLocationContainer);
-			if (pieceAtLocation.getTeam() == team)
-				possibleMoves.remove(location);
-		}
-	}
 }

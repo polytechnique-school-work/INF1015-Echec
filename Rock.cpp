@@ -34,10 +34,12 @@ LocationContainer Rock::getPossiblePositions(Location& loc) const
 	return locations;
 }
 
+// Pas dans les lignes couvertes par les tests : permet d'afficher lors des tests
 void Rock::display(std::ostream& out) const {
 	out << "R";
 }
 
+// Pas dans les lignes couvertes par les tests : utile pour la vue
 std::string model::Rock::getName()
 {
 	return "rock";

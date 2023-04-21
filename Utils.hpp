@@ -3,6 +3,8 @@
 #include <functional>
 #include <iostream>
 
+
+// Pas dans la couverture de code, seulement pour moi pour m'amuser à tester la durée d'exécution.
 void calculateDuration(std::function<void()> fonctionLambda) {
     auto start = std::chrono::high_resolution_clock::now();
     fonctionLambda();

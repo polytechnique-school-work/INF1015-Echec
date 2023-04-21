@@ -47,13 +47,12 @@ namespace model {
 		// *	Aucun pion ne peut le manger après le déplacement aux coordonnées choisies.
 		bool isSafeMove(const Location& loc, Team& team);
 		void removeUnsafeMove(LocationContainer& possibleMoves, Team team);
-		void removeSameTeamMove(LocationContainer& possibleMoves, Team team);
 
 		LocationContainer getEveryDangerousPlaces(Team& team);
 
 		bool isMovePossible(Location src, Location dst);
 
-		void saveBoard();
+		std::string saveBoard();
 
 		std::string convertPieceToBoard(PieceContainer& pieceContainer);
 

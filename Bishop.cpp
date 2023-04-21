@@ -35,10 +35,12 @@ LocationContainer Bishop::getPossiblePositions(Location& loc) const
 	return locations;
 }
 
+// Pas dans les lignes couvertes par les tests : permet d'afficher lors des tests
 void Bishop::display(std::ostream& out) const {
 	out << "F";
 }
 
+// Pas dans les lignes couvertes par les tests : utile pour la vue
 std::string model::Bishop::getName()
 {
 	return "bishop";

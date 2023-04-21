@@ -34,4 +34,66 @@ TEST(Positions, calculate_bishop) {
 	EXPECT_EQ(supposedPositions, calculatedPositions);
 }
 
+TEST(Positions, move_queen_possible) {
+
+	const std::string board = "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXXXXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFWQWKWFWCWR";
+
+	Board& boardInstance = Board::getInstance();
+
+	boardInstance.generateBoard(board);
+
+
+	bool value = boardInstance.isMovePossible({ 3, 7 }, { 3, 5 });
+	
+	EXPECT_TRUE(value);
+}
+
+TEST(Positions, move_queen_board) {
+
+	const std::string board = "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXXXXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFWQWKWFWCWR";
+
+	Board& boardInstance = Board::getInstance();
+
+	boardInstance.generateBoard(board);
+
+
+	boardInstance.movePiece({ 3, 7 }, { 3, 5 });
+
+	std::string value = boardInstance.saveBoard();
+
+	EXPECT_EQ(value, "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXWQXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFXXWKWFWCWR");
+}
+
+//TEST(Positions, move_queen) {
+//
+//	const std::string board = "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXXXXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFWQWKWFWCWR";
+//
+//	Board& boardInstance = Board::getInstance();
+//
+//	boardInstance.generateBoard(board);
+//
+//
+//	bool value = boardInstance.isMovePossible({ 3, 7 }, {3, 5});
+//	if (value) {
+//		boardInstance.movePiece({ 3, 7 }, { 3, 5 });
+//
+//		std::string value = boardInstance.saveBoard();
+//
+//		EXPECT_EQ(value, "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXXXXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFWQWKWFWCWR");
+//	}
+//}
+
+
+
+TEST(Game_end, check_if_mat) {
+
+	const std::string board = "XXXXXXBKXXBRXXXXBPXXXXXXXXXXBPXXXXXXXXXXXXXXXXBPXXBPXXXXWRXXXXXXXXXXXXXXXXXXWPWPWPWPXXXXXXXXXXXXXXXXXXBPXXXXXXXXXXXXWRXXWKXXXXXX";
+	Board& boardInstance = Board::getInstance();
+	boardInstance.generateBoard(board);
+
+	bool value = boardInstance.isMat(Team::WHITE);
+
+	EXPECT_FALSE(value);
+}
+
 #endif

@@ -13,10 +13,12 @@ LocationContainer Queen::getPossiblePositions(Location& loc) const
 	return bishopPositions;
 }
 
+// Pas dans les lignes couvertes par les tests : permet d'afficher lors des tests
 void Queen::display(std::ostream& out) const {
 	out << "Q";
 }
 
+// Pas dans les lignes couvertes par les tests : utile pour la vue
 std::string model::Queen::getName()
 {
 	return "queen";
