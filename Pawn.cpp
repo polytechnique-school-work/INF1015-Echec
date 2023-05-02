@@ -41,12 +41,13 @@ LocationContainer Pawn::getPossiblePositions(Location& loc) const
 		}
 
 		else if (board.getPiece({ boardLocation.first, boardLocation.second }).has_value()) {
-			continue;
+			break;
 		}
 
 		if (pos == Location(0, 2 * position) && this->getMoves()) {
 			continue;
 		}
+
 		locations.push_back(pos);
 	}
 
