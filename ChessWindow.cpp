@@ -86,10 +86,10 @@ void ChessWindow::generateWindow()
             ClickableLabel* label = new ClickableLabel();
             label->setFixedSize(50, 50);
             if ((row + col) % 2 == 0) {
-                label->setStyleSheet("background-color: rgb(255, 206, 158)");
+                label->setStyleSheet("background-color: rgb(197, 198, 200)");
             }
             else {
-                label->setStyleSheet("background-color: rgb(209, 139, 71)");
+                label->setStyleSheet("background-color: rgb(70, 162, 159)");
             }
 
             connect(label, &ClickableLabel::clicked, this, [this, col, row]() {onClickChess({ col, row }); });
@@ -219,7 +219,7 @@ void ChessWindow::setLabelUnsafe(QLabel* label)
         painter.drawImage(rect.topLeft(), image);
     }
     QColor color;
-    color.setRgb(216, 76, 76);
+    color.setRgb(102, 252, 241);
     color.setAlpha(255);
     QPen pen(color, 4, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
@@ -260,8 +260,8 @@ void ChessWindow::setLabelSelected(QLabel* label)
     int x = width / 2;
     int y = height / 2;
     QColor color;
-    color.setRgb(120, 120, 120);
-    color.setAlpha(100);
+    color.setRgb(102, 252, 241);
+    color.setAlpha(155);
     painter.setBrush(color);
     painter.setPen(QPen(Qt::black, 0));
     int radius = qMin(x, y) - 30;
