@@ -127,7 +127,6 @@ void ChessWindow::changeBoard(int i) {
 
     board.generateBoard(boardSelected);
     model::Game& game = model::Game::getInstance();
-    game.setTurn(Team::WHITE);
     refreshWindow();
 }
 
