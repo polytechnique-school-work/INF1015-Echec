@@ -5,6 +5,14 @@
 #ifdef TEST
 
 #include "Board.hpp"
+#include "King.hpp"
+#include "Knight.hpp"
+#include "Queen.hpp"
+#include "Pawn.hpp"
+#include "Rock.hpp"
+#include "Bishop.hpp"
+
+
 
 using namespace model;
 
@@ -64,25 +72,24 @@ TEST(Positions, move_queen_board) {
 	EXPECT_EQ(value, "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXWQXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFXXWKWFWCWR");
 }
 
-//TEST(Positions, move_queen) {
-//
-//	const std::string board = "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXXXXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFWQWKWFWCWR";
-//
-//	Board& boardInstance = Board::getInstance();
-//
-//	boardInstance.generateBoard(board);
-//
-//
-//	bool value = boardInstance.isMovePossible({ 3, 7 }, {3, 5});
-//	if (value) {
-//		boardInstance.movePiece({ 3, 7 }, { 3, 5 });
-//
-//		std::string value = boardInstance.saveBoard();
-//
-//		EXPECT_EQ(value, "BRBCBFBQBKBFBCBRBPBPBPXXBPXXBPBPXXXXXXXXXXXXXXXXXXXXXXBPXXBPXXXXXXXXXXWPXXXXWPXXXXXXXXXXXXXXXXXXWPWPWPXXWPWPXXWPWRWCWFWQWKWFWCWR");
-//	}
-//}
 
+TEST(Names, pieces_names_check) {
+	// Permet de clear le board pour pouvoir créer des rois.
+	const std::string board = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+	Board& boardInstance = Board::getInstance();
+	boardInstance.generateBoard(board);
+
+	std::vector<Piece*> pieces = {new King(Team::WHITE), new Queen(Team::BLACK), new Bishop(Team::BLACK), new Pawn(Team::WHITE), new Rock(Team::BLACK), new Knight(Team::BLACK)};
+
+	std::string value = "";
+
+	for (Piece* piece : pieces) {
+		value += piece->getName();
+		delete piece;
+	}
+
+	EXPECT_EQ(value, "kingqueenbishoppawnrockknight");
+}
 
 
 TEST(Game_end, check_if_mat) {
