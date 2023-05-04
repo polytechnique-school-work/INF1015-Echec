@@ -173,7 +173,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Queen.hpp" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Rock.hpp" />
   </ItemGroup>
   <ItemGroup>
