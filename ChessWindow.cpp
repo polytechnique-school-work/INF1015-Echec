@@ -23,6 +23,9 @@
 
 #include "Utils.hpp"
 
+constexpr int WHITE_BOARD[3] = { 197, 198, 200 };
+constexpr int BLACK_BOARD[3] = { 70, 162, 159 };
+
 using namespace model;
 using namespace vue;
 
@@ -85,12 +88,24 @@ void ChessWindow::generateWindow()
         for (int col = 0; col < 8; ++col) {
             ClickableLabel* label = new ClickableLabel();
             label->setFixedSize(50, 50);
+            const int* values = nullptr;
+
             if ((row + col) % 2 == 0) {
-                label->setStyleSheet("background-color: rgb(197, 198, 200)");
+                values = WHITE_BOARD;
             }
             else {
-                label->setStyleSheet("background-color: rgb(70, 162, 159)");
+                values = BLACK_BOARD;
             }
+
+            std::string background = "background-color: rgb(";
+            background += std::to_string(values[0]);
+            background += ", "; 
+            background += std::to_string(values[1]);
+            background += ", ";
+            background += std::to_string(values[2]);
+            background += ")";
+
+            label->setStyleSheet(QString::fromStdString(background));
 
             connect(label, &ClickableLabel::clicked, this, [this, col, row]() {onClickChess({ col, row }); });
 
@@ -171,8 +186,8 @@ void ChessWindow::refreshWindow()
     }
     model::Team team = model::Game::getInstance().getTurn();
 
-    for (int row = 0; row < 8; ++row) {
-        for (int col = 0; col < 8; ++col) {
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
 
             QLabel* label = dynamic_cast<QLabel*>(grid->itemAtPosition(row, col)->widget());
             PieceContainer& pieceCtr = board.getPiece({ col, row });
