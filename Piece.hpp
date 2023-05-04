@@ -32,11 +32,9 @@ namespace model {
 		void incrementMoves();
 		void decrementMoves();
 		bool getMoves() const;
-		virtual std::string getName();
+		virtual std::string getName() = 0;
 		virtual LocationContainer getPossiblePositions(Location& loc) const = 0;
-		virtual void display(std::ostream& out) const = 0;
 		virtual std::string getTag() = 0;
-		friend std::ostream& operator<<(std::ostream& out, const Piece& piece);
 		virtual ~Piece() = default;
 	protected:
 		Team team;

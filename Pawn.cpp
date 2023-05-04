@@ -32,10 +32,6 @@ LocationContainer Pawn::getPossiblePositions(Location& loc) const
 	return locations;
 }
 
-// Pas dans les lignes couvertes par les tests : permet d'afficher lors des tests
-void Pawn::display(std::ostream& out) const {
-	out << "P";
-}
 
 // Pas dans les lignes couvertes par les tests : utile pour la vue
 std::string model::Pawn::getName()

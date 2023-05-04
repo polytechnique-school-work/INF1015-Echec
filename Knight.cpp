@@ -7,10 +7,6 @@ LocationContainer Knight::getPossiblePositions([[maybe_unused]] Location& loc) c
 	return { {1, -2}, {2, -1},{2, 1},{1, 2},{-1, 2},{ -2, 1},{ -2, -1},{ -1, -2} };
 }
 
-// Pas dans les lignes couvertes par les tests : permet d'afficher lors des tests
-void Knight::display(std::ostream& out) const {
-	out << "C";
-}
 
 // Pas dans les lignes couvertes par les tests : utile pour la vue
 std::string model::Knight::getName()

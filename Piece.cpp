@@ -21,9 +21,3 @@ bool Piece::getMoves() const
 {
     return this->moves;
 }
-
-// Pas dans les lignes couvertes par les tests : utile pour la vue
-std::string model::Piece::getName()
-{
-    return "piece";
-}

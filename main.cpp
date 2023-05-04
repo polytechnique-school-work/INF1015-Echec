@@ -45,6 +45,27 @@ void executer() {
 int main(int argc, char *argv[])
 {
 	using namespace vue;
+
+	/*model::Piece* piece1 = nullptr;
+	model::Piece* piece2 = nullptr;
+	model::Piece* piece3 = nullptr;
+
+	try
+	{
+		piece1 = new model::King(model::Team::WHITE);
+		piece2 = new model::King(model::Team::BLACK);
+		piece3 = new model::King(model::Team::WHITE);
+		std::cout << "Nothing throw, executed" << std::endl;
+	}
+	catch (const std::logic_error& e)
+	{
+		delete piece1;
+		delete piece2;
+		delete piece3;
+		std::cout << e.what() << std::endl;
+	}*/
+
+
 	bibliotheque_cours::VerifierFuitesAllocations verifierFuitesAllocations;
 	QApplication app(argc, argv);
 	initialiserBibliothequeCours(argc, argv);

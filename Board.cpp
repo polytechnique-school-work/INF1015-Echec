@@ -77,12 +77,6 @@ namespace model {
 		return (piece.getTeam() == Team::WHITE ? "W" : "B") + piece.getTag();
 	}
 
-	// Retirer les positions éronnées (qui sont en dehors du tableau de jeu)
-	void model::Board::removeErronedLocations(LocationContainer& locations)
-	{
-		locations.remove_if([&](const Location& location) { return location.first < 0 || location.first >= BOARD_SIZE || location.second < 0 || location.second >= BOARD_SIZE; });
-	}
-
 	void model::Board::setPieceAt(PieceContainer& piece, Location loc)
 	{
 		// cout << "Changement de position de la pièce" << endl;

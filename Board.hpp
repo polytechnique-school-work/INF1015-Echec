@@ -18,7 +18,6 @@ namespace model {
 		PieceContainer& getPiece(Location src) const;
 		Board();
 
-		friend std::ostream& operator<<(std::ostream& out, const Board& board);
 
 		void rollback();
 
@@ -56,8 +55,6 @@ namespace model {
 
 		std::string convertPieceToBoard(PieceContainer& pieceContainer);
 
-		void removeErronedLocations(LocationContainer& locations);
-
 		void setPieceAt(PieceContainer& piece, Location loc);
 
 		static int nbExecution;
@@ -73,7 +70,4 @@ namespace model {
 
 		std::stack<std::unique_ptr<History>> history;
 	};
-
-	std::ostream& operator<<(std::ostream& out, const Board& board);
-	std::ostream& operator<<(std::ostream& out, const Team& team);
 }
