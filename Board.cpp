@@ -123,6 +123,7 @@ namespace model {
 				if (board[j][i].has_value() && typeid(**board[j][i]) == typeid(King) && (**board[j][i]).getTeam() == team) return { j, i };
 			}
 		}
+		return {};
 		// throw logic_error("Impossible de trouver le roi");
 	}
 
@@ -183,7 +184,6 @@ namespace model {
 			}
 		}
 
-		Game& game = Game::getInstance();
 		this->history = stack<std::unique_ptr<History>>();
 	}
 
@@ -238,6 +238,7 @@ namespace model {
 		case 'X': // No pieces
 			return {};
 		default:
+			return {};
 			break;
 		}
 	}
