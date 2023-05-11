@@ -84,8 +84,8 @@ void ChessWindow::generateWindow()
     Board& board = Board::getInstance();
     model::Team team = model::Game::getInstance().getTurn();
 
-    for (int row = 0; row < 8; ++row) {
-        for (int col = 0; col < 8; ++col) {
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
             ClickableLabel* label = new ClickableLabel();
             label->setFixedSize(50, 50);
             const int* values = nullptr;
@@ -301,6 +301,7 @@ void ChessWindow::onClickChess(model::Location loc)
     model::Board& board = model::Board::getInstance();
     vue::Game& vueGame = vue::Game::getInstance();
     model::Game& modelGame = model::Game::getInstance();
+    
 
     PieceContainer& pieceCtr = board.getPiece(loc);
 

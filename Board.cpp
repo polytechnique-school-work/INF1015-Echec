@@ -163,9 +163,9 @@ namespace model {
 
 		// Initialisation d'un tableau de 8x8 cases.
 		// Tous les éléments sont en fait des nullopt.
-		this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(8);
-		for (int i = 0; i < 8; ++i)
-			board[i] = std::make_unique<PieceContainer[]>(8);
+		this->board = std::make_unique<std::unique_ptr<PieceContainer[]>[]>(BOARD_SIZE);
+		for (int i = 0; i < BOARD_SIZE; ++i)
+			board[i] = std::make_unique<PieceContainer[]>(BOARD_SIZE);
 
 		int actual = 0;
 		for (int y = 0; y < BOARD_SIZE; ++y) {
